@@ -2,7 +2,7 @@ package algo
 
 type AStarVerexState struct {
 	CurPathWeight  int
-	heapNode       *HeapNode
+	heapNode       *HeapNode[interface{}]
 	previousVertex AStarVerex
 }
 
