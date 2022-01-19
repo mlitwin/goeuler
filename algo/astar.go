@@ -1,77 +1,108 @@
 package algo
 
-type AStarVerexState struct {
-	CurPathWeight  int
-	heapNode       *HeapNode[interface{}]
-	previousVertex AStarVerex
+
+type AStarGraph[V any, ID comparable, W Numeric] interface {
+	GetId(v *V) ID
+	Heuristic(v *V) W
+	Visit(v *V, visit func(neighbor *V, weight W))
 }
 
-func (s AStarVerexState) wouldBeBetter(score int) bool {
-	if s.heapNode == nil {
+type AStarVerexState[V any, W Numeric] struct {
+	v *V
+	visited bool
+	CurPathWeight  W
+	heapNode       *HeapNode[*V,W]
+	prev *AStarVerexState[V,W]
+}
+
+func (s AStarVerexState[V, W]) wouldBeBetter(score W) bool {
+	if !s.visited {
 		return true
 	}
 
 	return score < s.CurPathWeight
 }
 
-type AStarVerex interface {
-	GetState() *AStarVerexState
-	IsEnd() bool
-	Visit(visit func(neighbor AStarVerex, weight int))
-	Heuristic() int
+type minPathAStarImp[V any, ID comparable, W Numeric] struct {
+	g AStarGraph[V,ID,W]
+	start *V
+	end *V
+	vertexState map[ID]*AStarVerexState[V, W]
+	openSet *Heap[*V,W]
+
 }
 
-type AStarVerexImp struct {
-	state AStarVerexState
+func (imp minPathAStarImp[V,ID,W]) getState(v *V) *AStarVerexState[V,W] {
+	id := imp.g.GetId(v)
+	ret := imp.vertexState[id]
+	if nil == ret {
+		ret = &AStarVerexState[V,W]{}
+		imp.vertexState[id] = ret
+	}
+
+	return ret
 }
 
-func (v *AStarVerexImp) GetState() *AStarVerexState {
-	return &v.state
-}
-
-func getHeapVertex(node *HeapNode) AStarVerex {
-	value := node.value
-	vertex := value.(AStarVerex)
-	return vertex
-}
 
 // Find the actual path that was used
-func backtrackPath(s AStarVerex) []AStarVerex {
-	var path []AStarVerex
-	path = append(path, s)
+func (imp minPathAStarImp[V,ID,W]) backtrackPath(v *V) []*V {
+	var path []*V
+	s := imp.getState(v)
+
 
 	for s != nil {
-		path = append([]AStarVerex{s}, path...)
-		s = s.GetState().previousVertex
+		//fmt.Println(s, s.prev)
+		path = append([]*V{s.v}, path...)
+		s = s.prev
 	}
 
 	return path
 }
 
-func MinPathAStar(start AStarVerex) (int, []AStarVerex) {
-	openSet := NewHeap()
-	state := start.GetState()
-	state.heapNode = openSet.Push(start, 0)
+func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) (W, []*V) {
+	imp := minPathAStarImp[V,ID,W]{g, start, end, nil, nil}
+	imp.vertexState =  make(map[ID]*AStarVerexState[V,W])
+	imp.openSet = NewHeap[*V,W]()
 
-	for openSet.Len() > 0 {
-		cur := getHeapVertex(openSet.Pop())
+	imp.openSet.Push(start, 0)
 
-		curState := cur.GetState()
 
-		if cur.IsEnd() {
-			return curState.CurPathWeight, backtrackPath(cur)
+	endId := g.GetId(end)
+
+	for imp.openSet.Len() > 0 {
+		cur := imp.openSet.Pop()
+		curv := cur.value
+		curId := g.GetId(curv)
+		curState := imp.getState(curv)
+		curState.visited = true
+		curState.v = curv
+
+
+		if curId == endId {
+					fmt.Println("backtrack", curId, curState.CurPathWeight)
+
+			return curState.CurPathWeight, imp.backtrackPath(curv)
 		}
 
-		cur.Visit(func(neighbor AStarVerex, weight int) {
+		fmt.Println("Visiting from ", curId)
+
+		g.Visit(curv, func(neighbor *V, weight W) {
 			score := curState.CurPathWeight + weight
-			nState := neighbor.GetState()
+			nState := imp.getState(neighbor)
+			//fmt.Println(curId, neighbor)
+
 			if nState.wouldBeBetter(score) {
-				remainingPathEstimate := score + neighbor.Heuristic()
-				nState.previousVertex = cur
+				remainingPathEstimate := score + g.Heuristic(neighbor)
+				nState.prev = curState
 				nState.CurPathWeight = score
-				nState.heapNode = openSet.Upsert(neighbor, remainingPathEstimate, nState.heapNode)
+				nState.heapNode = imp.openSet.Upsert(neighbor, remainingPathEstimate, nState.heapNode)
+				nState.visited = true
+				nState.v = neighbor
+				fmt.Println("adding", neighbor, weight, score, curState, nState)
+
 			}
 		})
+
 	}
 
 	return 0, nil

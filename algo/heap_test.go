@@ -6,14 +6,14 @@ import (
 )
 
 func TestHeapCreate(t *testing.T) {
-	h := NewHeap[int]()
+	h := NewHeap[int,int]()
 	if h.Len() != 0 {
 		t.Fatal("Could not create Heap")
 	}
 }
 
 func TestHeapPush(t *testing.T) {
-	h := NewHeap[int]()
+	h := NewHeap[int,int]()
 	h.Push(0, 1)
 	if h.Len() != 1 {
 		t.Fatal("Could not create Push")
@@ -27,7 +27,7 @@ func TestHeapPush(t *testing.T) {
 }
 
 func TestHeapOrderedPushPops(t *testing.T) {
-	h := NewHeap[int]()
+	h := NewHeap[int,int]()
 
 	for i := 0; i < 10; i++ {
 		h.Push(i, i)
@@ -45,8 +45,8 @@ func TestHeapOrderedPushPops(t *testing.T) {
 }
 
 func doPushPops(count int, r *rand.Rand, n int, t *testing.T) {
-	h := NewHeap[int]()
-	var nodes []*HeapNode[int]
+	h := NewHeap[int,int]()
+	var nodes []*HeapNode[int,int]
 
 	for i := 0; i < count; i++ {
 		var priority int

@@ -1,27 +1,35 @@
 package algo
 
-type HeapNode[V any] struct {
-	priority int
+import (
+	"constraints"
+)
+
+type Numeric interface {
+	constraints.Integer | constraints.Float
+}
+
+type HeapNode[V any, P Numeric] struct {
+	priority P
 	index    int
 	value    V
 }
 
-type Heap[V any] struct {
-	p []*HeapNode[V]
+type Heap[V any, P Numeric] struct {
+	p []*HeapNode[V,P]
 }
 
-func (h *Heap[V]) Len() int {
+func (h *Heap[V,P]) Len() int {
 	return len(h.p)
 }
 
-func (h *Heap[V]) Push(x V, priority int) *HeapNode[V] {
-	n := &HeapNode[V]{priority, len(h.p), x}
+func (h *Heap[V,P]) Push(x V, priority P) *HeapNode[V,P] {
+	n := &HeapNode[V,P]{priority, len(h.p), x}
 	h.p = append(h.p, n)
 	h.swim(len(h.p) - 1)
 	return n
 }
 
-func (h *Heap[V]) Pop() *HeapNode[V] {
+func (h *Heap[V,P]) Pop() *HeapNode[V,P] {
 	ret := h.p[0]
 	last := len(h.p) - 1
 
@@ -36,7 +44,7 @@ func (h *Heap[V]) Pop() *HeapNode[V] {
 	return ret
 }
 
-func (h *Heap[V]) Decrease(n *HeapNode[V], priority int) {
+func (h *Heap[V,P]) Decrease(n *HeapNode[V,P], priority P) {
 	if priority > n.priority {
 		panic("Min Heap does not support an increase priority operation")
 	}
@@ -45,7 +53,7 @@ func (h *Heap[V]) Decrease(n *HeapNode[V], priority int) {
 }
 
 // Convenience fucnction to Push if new, change priority if exists
-func (h *Heap[V]) Upsert(x V, priority int, n *HeapNode[V]) *HeapNode[V] {
+func (h *Heap[V, P]) Upsert(x V, priority P, n *HeapNode[V,P]) *HeapNode[V,P] {
 	if nil == n {
 		return h.Push(x, priority)
 	}
@@ -55,13 +63,13 @@ func (h *Heap[V]) Upsert(x V, priority int, n *HeapNode[V]) *HeapNode[V] {
 	return n
 }
 
-func NewHeap[V any]() *Heap[V] {
-	h := Heap[V]{}
+func NewHeap[V any, P Numeric]() *Heap[V,P] {
+	h := Heap[V,P]{}
 
 	return &h
 }
 
-func (h *Heap[V]) Validate() bool {
+func (h *Heap[V,P]) Validate() bool {
 	var valid bool = true
 	p := h.p
 	l := len(p)
@@ -81,7 +89,7 @@ func (h *Heap[V]) Validate() bool {
 	return valid
 }
 
-func (h *Heap[V]) swap(i int, j int) {
+func (h *Heap[V,P]) swap(i int, j int) {
 	t := h.p[i]
 	h.p[i] = h.p[j]
 	h.p[j] = t
@@ -103,7 +111,7 @@ func right(i int) int {
 	return 2*i + 2
 }
 
-func (h *Heap[V]) sink(i int) {
+func (h *Heap[V,P]) sink(i int) {
 	p := h.p
 
 	cur := i
@@ -138,7 +146,7 @@ func (h *Heap[V]) sink(i int) {
 
 }
 
-func (h *Heap[V]) swim(i int) {
+func (h *Heap[V,P]) swim(i int) {
 	p := h.p
 
 	cur := i

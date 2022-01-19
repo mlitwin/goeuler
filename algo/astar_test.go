@@ -2,22 +2,31 @@ package algo
 
 import (
 	"testing"
+	"fmt"
 )
 
-// Basic grid
-type node struct {
-	AStarVerexImp
-	g [][]node
+type index struct {
+	i, j int
+}
+
+type vertex struct {
+	pos index
+}
+
+type grid struct {
 	n int
-	i int
-	j int
 }
 
-func (n node) IsEnd() bool {
-	return n.i == (n.n-1) && n.j == (n.n-1)
+func (g grid) GetId(v *vertex) index {
+	return v.pos
 }
 
-func (n node) Visit(visit func(neighbor AStarVerex, weight int)) {
+func (g grid) Heuristic(v *vertex) int {
+	return 0
+}
+
+func (g grid) Visit(v *vertex, visit func(neighbor *vertex, weight int)) {
+	n := g.n
 	for i := -1; i <= 1; i++ {
 		for j := -1; j <= 1; j++ {
 
@@ -25,46 +34,40 @@ func (n node) Visit(visit func(neighbor AStarVerex, weight int)) {
 				continue
 			}
 
-			x := n.i + i
-			y := n.j + j
+			neighbor := vertex{index{v.pos.i + i, v.pos.j + j}}
 
-			if x < 0 || x >= n.n || y < 0 || y >= n.n {
+			if neighbor.pos.i < 0 || neighbor.pos.i >= n || neighbor.pos.j < 0 || neighbor.pos.j >= n {
 				continue
 			}
 
-			dy := n.n - y - 1
+			wt := 100
 
-			visit(&n.g[x][y], x*dy*dy)
+			if neighbor.pos.i == 0 || neighbor.pos.j == n -1 {
+				wt = 1;
+			}
+
+			visit(&neighbor, wt)
 		}
 	}
-}
-
-func (n node) Heuristic() int {
-	return 0
 }
 
 func TestAStarBasic(t *testing.T) {
-	var nodes = make([][]node, 10)
-	for i := range nodes {
-		nodes[i] = make([]node, 10)
-	}
+	g := grid{10}
+	start := vertex{index{0,0}}
+	end := vertex{index{9,9}}
 
-	for i := 0; i < 10; i++ {
-		for j := 0; j < 10; j++ {
-			nodes[i][j].g = nodes
-			nodes[i][j].n = 10
-			nodes[i][j].i = i
-			nodes[i][j].j = j
-		}
-	}
+	wt, path := MinPathAStar[vertex, index, int](&g, &start, &end)
 
-	wt, path := MinPathAStar(&nodes[0][0])
-
-	if wt != 0 {
+	if wt != 17 {
 		t.Fatal("Wrong weight", wt)
 	}
 
-	if len(path) != 19 {
-		t.Fatal("Wrong path", path)
+	if len(path) != 18 {
+		for _,v:= range(path) {
+			fmt.Println(v)
+		}
+		t.Fatal("Wrong path", len(path), path, wt)
 	}
+
+
 }
