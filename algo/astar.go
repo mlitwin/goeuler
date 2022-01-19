@@ -16,13 +16,18 @@ type AStarGraph[V any, ID comparable, W Numeric] interface {
 type aStarVerexState[V any, W Numeric] struct {
 	v *V
 	visited bool
-	CurPathWeight  W
+	score  W
 	heapNode       *HeapNode[*V,W]
 	prev *aStarVerexState[V,W]
 }
 
 func (s aStarVerexState[V, W]) wouldBeBetter(score W) bool {
-	return !s.visited || score < s.CurPathWeight
+	return !s.visited || score < s.score
+}
+
+func (s *aStarVerexState[V, W]) setScore(score W) {
+	s.score = score
+	s.visited = true
 }
 
 type minPathAStarImp[V any, ID comparable, W Numeric] struct {
@@ -36,13 +41,11 @@ type minPathAStarImp[V any, ID comparable, W Numeric] struct {
 }
 
 
-// A map[]*aStarVerexState
-// neededing this function proves I still don't understand something about
-// golang maps
+// getState is a convenience method to get vertex state *, with autovivification
 func (imp minPathAStarImp[V,ID,W]) getState(v *V) *aStarVerexState[V,W] {
 	id := imp.g.GetId(v)
 	ret := imp.vertexState[id]
-	if nil == ret {
+	if nil == ret { // vivify
 		ret = &aStarVerexState[V,W]{}
 		ret.v = v
 		imp.vertexState[id] = ret
@@ -89,19 +92,18 @@ func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *
 		curState.visited = true
 
 		if imp.isEnd(cur.value) {
-			return curState.CurPathWeight, imp.backtrackPath(cur.value)
+			return curState.score, imp.backtrackPath(cur.value)
 		}
 
 		g.Visit(cur.value, func(neighbor *V, weight W) {
-			score := curState.CurPathWeight + weight
+			score := curState.score + weight
 			nState := imp.getState(neighbor)
 
 			if nState.wouldBeBetter(score) {
+				nState.setScore(score)
 				remainingPathEstimate := score + g.Heuristic(neighbor)
 				nState.prev = curState
-				nState.CurPathWeight = score
 				nState.heapNode = imp.openSet.Upsert(neighbor, remainingPathEstimate, nState.heapNode)
-				nState.visited = true
 			}
 		})
 
