@@ -16,42 +16,47 @@ type AStarVerexState[V any, W Numeric] struct {
 }
 
 func (s AStarVerexState[V, W]) wouldBeBetter(score W) bool {
-	if !s.visited {
-		return true
-	}
-
-	return score < s.CurPathWeight
+	return !s.visited || score < s.CurPathWeight
 }
 
 type minPathAStarImp[V any, ID comparable, W Numeric] struct {
 	g AStarGraph[V,ID,W]
 	start *V
 	end *V
+
+	endId ID
 	vertexState map[ID]*AStarVerexState[V, W]
 	openSet *Heap[*V,W]
-
 }
 
+
+// A map[]*AStarVerexState
+// neededing this function proves I still don't understand something about
+// golang maps
 func (imp minPathAStarImp[V,ID,W]) getState(v *V) *AStarVerexState[V,W] {
 	id := imp.g.GetId(v)
 	ret := imp.vertexState[id]
 	if nil == ret {
 		ret = &AStarVerexState[V,W]{}
+		ret.v = v
 		imp.vertexState[id] = ret
 	}
 
 	return ret
 }
 
+func (imp minPathAStarImp[V,ID,W]) isEnd(v *V) bool {
+	return imp.g.GetId(v) == imp.endId
+}
 
-// Find the actual path that was used
+
+
+// Backtrack to find the actual path that was used
 func (imp minPathAStarImp[V,ID,W]) backtrackPath(v *V) []*V {
 	var path []*V
 	s := imp.getState(v)
 
-
 	for s != nil {
-		//fmt.Println(s, s.prev)
 		path = append([]*V{s.v}, path...)
 		s = s.prev
 	}
@@ -59,37 +64,31 @@ func (imp minPathAStarImp[V,ID,W]) backtrackPath(v *V) []*V {
 	return path
 }
 
-func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) (W, []*V) {
-	imp := minPathAStarImp[V,ID,W]{g, start, end, nil, nil}
+func newminPathAStarImp[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) minPathAStarImp[V,ID,W] {
+	imp := minPathAStarImp[V,ID,W]{g, start, end,  g.GetId(end), nil, nil}
 	imp.vertexState =  make(map[ID]*AStarVerexState[V,W])
 	imp.openSet = NewHeap[*V,W]()
 
+
+	return imp
+}
+
+func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) (W, []*V) {
+	imp := newminPathAStarImp[V,ID,W](g, start, end)
 	imp.openSet.Push(start, 0)
-
-
-	endId := g.GetId(end)
 
 	for imp.openSet.Len() > 0 {
 		cur := imp.openSet.Pop()
-		curv := cur.value
-		curId := g.GetId(curv)
-		curState := imp.getState(curv)
+		curState := imp.getState(cur.value)
 		curState.visited = true
-		curState.v = curv
 
-
-		if curId == endId {
-					fmt.Println("backtrack", curId, curState.CurPathWeight)
-
-			return curState.CurPathWeight, imp.backtrackPath(curv)
+		if imp.isEnd(cur.value) {
+			return curState.CurPathWeight, imp.backtrackPath(cur.value)
 		}
 
-		fmt.Println("Visiting from ", curId)
-
-		g.Visit(curv, func(neighbor *V, weight W) {
+		g.Visit(cur.value, func(neighbor *V, weight W) {
 			score := curState.CurPathWeight + weight
 			nState := imp.getState(neighbor)
-			//fmt.Println(curId, neighbor)
 
 			if nState.wouldBeBetter(score) {
 				remainingPathEstimate := score + g.Heuristic(neighbor)
@@ -97,9 +96,6 @@ func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *
 				nState.CurPathWeight = score
 				nState.heapNode = imp.openSet.Upsert(neighbor, remainingPathEstimate, nState.heapNode)
 				nState.visited = true
-				nState.v = neighbor
-				fmt.Println("adding", neighbor, weight, score, curState, nState)
-
 			}
 		})
 
