@@ -1,21 +1,27 @@
+// Package algo comprises algorithms conceptually more complicaticated than those in package arith
+// These will generally be graph theoretical, sorting and searching, etc., rather than more
+// conceptually arithmetic ones. algo can use arith, but not conversely.
 package algo
 
-
+// AStarGraph defines the interface needed by the caller
+// They need a graph object which traffics in verticies.
+// In order to be able to store auxilliary information about verticies
+// there also needs to be a comparable vertex ID
 type AStarGraph[V any, ID comparable, W Numeric] interface {
 	GetId(v *V) ID
 	Heuristic(v *V) W
 	Visit(v *V, visit func(neighbor *V, weight W))
 }
 
-type AStarVerexState[V any, W Numeric] struct {
+type aStarVerexState[V any, W Numeric] struct {
 	v *V
 	visited bool
 	CurPathWeight  W
 	heapNode       *HeapNode[*V,W]
-	prev *AStarVerexState[V,W]
+	prev *aStarVerexState[V,W]
 }
 
-func (s AStarVerexState[V, W]) wouldBeBetter(score W) bool {
+func (s aStarVerexState[V, W]) wouldBeBetter(score W) bool {
 	return !s.visited || score < s.CurPathWeight
 }
 
@@ -25,19 +31,19 @@ type minPathAStarImp[V any, ID comparable, W Numeric] struct {
 	end *V
 
 	endId ID
-	vertexState map[ID]*AStarVerexState[V, W]
+	vertexState map[ID]*aStarVerexState[V, W]
 	openSet *Heap[*V,W]
 }
 
 
-// A map[]*AStarVerexState
+// A map[]*aStarVerexState
 // neededing this function proves I still don't understand something about
 // golang maps
-func (imp minPathAStarImp[V,ID,W]) getState(v *V) *AStarVerexState[V,W] {
+func (imp minPathAStarImp[V,ID,W]) getState(v *V) *aStarVerexState[V,W] {
 	id := imp.g.GetId(v)
 	ret := imp.vertexState[id]
 	if nil == ret {
-		ret = &AStarVerexState[V,W]{}
+		ret = &aStarVerexState[V,W]{}
 		ret.v = v
 		imp.vertexState[id] = ret
 	}
@@ -66,7 +72,7 @@ func (imp minPathAStarImp[V,ID,W]) backtrackPath(v *V) []*V {
 
 func newminPathAStarImp[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) minPathAStarImp[V,ID,W] {
 	imp := minPathAStarImp[V,ID,W]{g, start, end,  g.GetId(end), nil, nil}
-	imp.vertexState =  make(map[ID]*AStarVerexState[V,W])
+	imp.vertexState =  make(map[ID]*aStarVerexState[V,W])
 	imp.openSet = NewHeap[*V,W]()
 
 
