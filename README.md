@@ -10,7 +10,8 @@ This is a library of general algorithms. Mostly for use in Project Euler problem
 
 ### arith
 
-The `arith` package will have lower-level entities and functions.
+The `arith` package will have lower-level entities and functions. The general type used for integers is `int64`, since Project Euler generally keeps itself to problems that basically fit into a 32 bit integer, so 64 bits leaves you room for to do some basic calculations allowing some intermediate results which would overflow in 32 bits.
+
 
 #### Iterator
 
@@ -25,6 +26,7 @@ Implementations:
 * `C(n,k)` n choose k
 * [`Factoradic`](https://en.wikipedia.org/wiki/Factorial_number_system) number, supporting conversion to a permutation.
 * `RationalFraction` supporting extraction of arbitrary base `NextMantissaDigit()`
+* `IsPrime()`
 
 ### algo
 
