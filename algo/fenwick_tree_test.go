@@ -1,11 +1,31 @@
 package algo
 
 import (
+	"math/rand"
 	"testing"
 )
 
+func sumRuns(t *testing.T, n int64) {
+	f := NewFenwickTree(n)
+	perm := rand.Perm(int(n))
+
+	var i int64
+	for i = 1; i <= n; i++ {
+		index := int64(perm[int(i-1)]) + 1
+		f.Update(index, 1)
+	}
+
+	for i = 1; i <= n; i++ {
+		sum := f.Read(i)
+		if sum != i {
+			t.Fatal("bad run of", n, " at ", i, " got ", sum)
+		}
+	}
+
+}
+
 func TestFenwickTree(t *testing.T) {
-	f := NewFenwickTree()
+	f := NewFenwickTree(10)
 
 	r := f.Read(0)
 	if r != 0 {
@@ -39,11 +59,5 @@ func TestFenwickTree(t *testing.T) {
 		t.Fatal("bad nd 2read", r)
 	}
 
-	f.Update(200, 200)
-
-	r = f.Read(200)
-	if r != 202 {
-		f.Debug()
-		t.Fatal("bad far read", r)
-	}
+	sumRuns(t, 10)
 }
