@@ -16,23 +16,26 @@ func NewFenwickTree(highIndex int64) *FenwickTree {
 	return &FenwickTree{highIndex, make(map[int64]int64)}
 }
 
-func lsval(idx int64) int64 {
-	return idx & (-idx)
+func parent(idx int64) int64 {
+	return (idx & (idx + 1)) - 1
+}
+
+func child(idx int64) int64 {
+	return idx | (idx + 1)
 }
 
 func (f FenwickTree) Read(idx int64) (ret int64) {
-	for idx > 0 {
+	for idx >= 0 {
 		ret += f.tree[idx]
-		idx -= lsval(idx)
+		idx = parent(idx)
 	}
-
 	return
 }
 
 func (f *FenwickTree) Update(idx int64, val int64) {
 	for idx <= f.highIndex {
 		f.tree[idx] += val
-		idx += lsval(idx)
+		idx = child(idx)
 	}
 }
 

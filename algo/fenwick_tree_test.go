@@ -7,17 +7,17 @@ import (
 
 func sumRuns(t *testing.T, n int64) {
 	f := NewFenwickTree(n)
-	perm := rand.Perm(int(n))
+	perm := rand.Perm(int(n + 1))
 
 	var i int64
-	for i = 1; i <= n; i++ {
-		index := int64(perm[int(i-1)]) + 1
+	for i = 0; i <= n; i++ {
+		index := int64(perm[int(i)])
 		f.Update(index, 1)
 	}
 
-	for i = 1; i <= n; i++ {
+	for i = 0; i <= n; i++ {
 		sum := f.Read(i)
-		if sum != i {
+		if sum != i+1 {
 			t.Fatal("bad run of", n, " at ", i, " got ", sum)
 		}
 	}
