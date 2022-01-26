@@ -25,6 +25,9 @@ func child(idx int64) int64 {
 }
 
 func (f FenwickTree) Read(idx int64) (ret int64) {
+	if idx > f.highIndex {
+		idx = f.highIndex
+	}
 	for idx >= 0 {
 		ret += f.tree[idx]
 		idx = parent(idx)
@@ -33,6 +36,9 @@ func (f FenwickTree) Read(idx int64) (ret int64) {
 }
 
 func (f *FenwickTree) Update(idx int64, val int64) {
+	if idx > f.highIndex {
+		panic("Fenwick tree update with index more than max")
+	}
 	for idx <= f.highIndex {
 		f.tree[idx] += val
 		idx = child(idx)

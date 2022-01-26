@@ -59,5 +59,23 @@ func TestFenwickTree(t *testing.T) {
 		t.Fatal("bad nd 2read", r)
 	}
 
+	r = f.Read(200)
+	if r != 2 {
+		f.Debug()
+		t.Fatal("bad far read", r)
+	}
 	sumRuns(t, 10)
+}
+
+func TestFenwickTreeErrorInputs(t *testing.T) {
+	f := NewFenwickTree(10)
+
+	func() {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Errorf("Out of range update did not panic")
+			}
+		}()
+		f.Update(20, 1)
+	}()
 }
