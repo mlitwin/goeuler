@@ -21,3 +21,20 @@ func Pow(x int64, n int64) int64 {
 
 	return x * y
 }
+
+//https://en.wikipedia.org/wiki/Integer_square_root
+func IntSqrt(n int64) int64 {
+	var l, m, r int64
+	r = n + 1
+
+	for l != r-1 {
+		m = (l + r) / 2
+		if m*m <= n {
+			l = m
+		} else {
+			r = m
+		}
+	}
+
+	return l
+}

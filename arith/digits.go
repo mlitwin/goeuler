@@ -12,3 +12,15 @@ func Digits(n int64, b int64) []int64 {
 
 	return ret
 }
+
+func ValueOfDigits(n []int64, b int64) (ret int64) {
+	i := len(n) - 1
+	var place int64 = 1
+	for i >= 0 {
+		ret += n[i] * place
+		i--
+		place *= b
+	}
+
+	return
+}

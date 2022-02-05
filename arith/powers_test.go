@@ -25,3 +25,20 @@ func TestPow(t *testing.T) {
 	}
 
 }
+
+func TestIntSqrt(t *testing.T) {
+	var k int64
+	for k = 0; k < 20; k++ {
+		s := IntSqrt(k * k)
+		if s != k {
+			t.Fatal("Bad IntSqrt of k^2", k, s)
+		}
+	}
+
+	for k = 1; k < 20; k++ {
+		s := IntSqrt(k*k + 1)
+		if s != k {
+			t.Fatal("Bad IntSqrt of k^2+1", k, s)
+		}
+	}
+}
