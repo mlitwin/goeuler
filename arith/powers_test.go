@@ -41,4 +41,20 @@ func TestIntSqrt(t *testing.T) {
 			t.Fatal("Bad IntSqrt of k^2+1", k, s)
 		}
 	}
+
+	k = IntSqrt(MaxInt64)
+	if MaxSqrtInt64 != k {
+		t.Fatal("Bad IntSqrt of MaxInt64", k)
+	}
+
+	k = IntSqrt(MaxSquareInt64)
+	if MaxSqrtInt64 != k {
+		t.Fatal("Bad IntSqrt of MaxSquareInt64", k)
+	}
+
+	s := MaxSqrtInt64 - 1
+	k = IntSqrt(s * s)
+	if s != k {
+		t.Fatal("Bad IntSqrt of MaxSquareInt64 - 1", k, s, s-k)
+	}
 }
