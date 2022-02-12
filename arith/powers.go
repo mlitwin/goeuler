@@ -48,3 +48,30 @@ func IntSqrt(n int64) int64 {
 
 	return l
 }
+
+func IntSolveQuadradic(a, b, c int64) (ret []int64) {
+	d2 := b*b - 4*a*c
+	if d2 < 0 {
+		return
+	}
+	d := IntSqrt(d2)
+
+	if d*d != d2 {
+		return
+	}
+	twoa := 2 * a
+
+	plus := -b + d
+	if plus%twoa == 0 {
+		plus /= twoa
+		ret = append(ret, plus)
+	}
+
+	minus := -b - d
+	if minus%twoa == 0 {
+		minus /= twoa
+		ret = append(ret, minus)
+	}
+
+	return
+}

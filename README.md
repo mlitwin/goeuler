@@ -27,6 +27,9 @@ Implementations:
 * [`Factoradic`](https://en.wikipedia.org/wiki/Factorial_number_system) number, supporting conversion to a permutation.
 * `RationalFraction` supporting extraction of arbitrary base `NextMantissaDigit()`
 * `IsPrime()`
+* `Digits(n,base)` - return digits in `base` as a slice
+* `ValueOfDigits(slice,base)` - convert digit slice back to `int64`
+* `IntSolveQuadradic(a,b,c)` returns integer roots of ax^2+bx+c as a slice, largest root first
 
 ### algo
 
