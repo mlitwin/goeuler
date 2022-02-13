@@ -29,7 +29,11 @@ Implementations:
 * `IsPrime()`
 * `Digits(n,base)` - return digits in `base` as a slice
 * `ValueOfDigits(slice,base)` - convert digit slice back to `int64`
-* `IntSolveQuadradic(a,b,c)` returns integer roots of ax^2+bx+c as a slice, largest root first
+* `IntSolveQuadradic(a,b,c)` returns integer roots of `ax^2+bx+c` as a slice, largest root first
+* `InverseModN(a,n)` - modular inverse (or 0 if no inverse)
+* `Integer[V]` - Interface for Integer like types. `V` is the actual type of the values, the `Integer[V]` has methods to add/subtract/multiple/divide/etc `V`'s
+    * `NewIntModM(m int64)` an `Integer[int64]` for arithmetic Mod m
+    * `PowOf[V any](f Integer[V], x V, n int64) V`
 
 ### algo
 
