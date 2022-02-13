@@ -58,3 +58,26 @@ func TestIntSqrt(t *testing.T) {
 		t.Fatal("Bad IntSqrt of MaxSquareInt64 - 1", k, s, s-k)
 	}
 }
+
+func TestPowOf(t *testing.T) {
+	m := NewIntModM(7)
+	var r, x int64
+
+	m.Let(&x, 2)
+
+	r = PowOf[int64](*m, x, 6)
+
+	if r != 1 {
+		t.Fatal("Bad 2^6 mod 7", r)
+	}
+	N := Pow(10, 10)
+
+	var m1 = NewIntModM(N)
+
+	r = PowOf[int64](*m1, 17, 17)
+
+	if r != 1 {
+		t.Fatal("Bad 17^17 mod 10^10", r)
+	}
+
+}

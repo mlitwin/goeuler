@@ -44,6 +44,31 @@ func LCM(a, b int64) int64 {
 	return (a * b) / gcd
 }
 
+func InverseModN(a, n int64) int64 {
+	var t int64 = 0
+	var newt int64 = 1
+	var r int64 = n
+	var newr int64 = a
+
+	for newr != 0 {
+		q := r / newr
+
+		tmp1 := newt
+		newt = t - q*newt
+		t = tmp1
+
+		tmp2 := newr
+		newr = r - q*newr
+		r = tmp2
+	}
+
+	if r > 1 {
+		return 0
+	}
+
+	return t + n
+}
+
 func Totient(n int64) int64 {
 	var result int64 = n
 	var i int64
