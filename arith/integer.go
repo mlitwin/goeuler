@@ -11,6 +11,7 @@ type Integer[V any] interface {
 	Diff(x *V, a V, b V)
 	Mul(x *V, a V, b V)
 	Div(x *V, a V, b V)
+	Cmp(x *V, a V, b V) int
 }
 
 type IntModM struct {
@@ -80,6 +81,17 @@ func (m IntModM) Div(x *int64, a int64, b int64) {
 	}
 	
 	*x = (a*b)%m.m
+}
+
+func (m IntModM) Cmp(x *int64, a int64, b int64) int {
+	switch {
+	case a < b:
+		return -1
+	case a > b:
+		return 1
+	}
+
+	return 0
 }
 
 

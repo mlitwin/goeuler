@@ -76,7 +76,7 @@ func TestPowOf(t *testing.T) {
 
 	r = PowOf[int64](*m1, 17, 17)
 
-	if r != 1 {
+	if r != 6336764177 {
 		t.Fatal("Bad 17^17 mod 10^10", r)
 	}
 

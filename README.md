@@ -65,3 +65,7 @@ Snippets:
 * `go1.18beta1` - workspaces / generics' `alias godev=go1.18beta1`
 * godev work init arith algo
 * godev mod init github.com/mlitwin/goeuler/arith
+
+
+
+https://github.com/JohnStarich/go/tree/master/gopages
