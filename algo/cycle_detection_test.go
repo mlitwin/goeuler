@@ -1,7 +1,6 @@
 package algo
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -42,7 +41,6 @@ func TestCycleDetection(t *testing.T) {
 
 	d := NewCycleDetector(&c)
 	d.FindCycleFlyod()
-	fmt.Println(d)
 	if d.Distance%9 != 0 {
 		t.Fatal("no cycle found for", c, d.Distance)
 	}
