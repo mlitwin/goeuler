@@ -24,3 +24,13 @@ func ValueOfDigits(n []int64, b int64) (ret int64) {
 
 	return
 }
+
+func HistogramOfDigits(n []int64, b int64) []int64 {
+	ret := make([]int64, b)
+
+	for _, d := range n {
+		ret[d]++
+	}
+
+	return ret
+}
