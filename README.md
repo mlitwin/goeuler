@@ -50,7 +50,22 @@ A `MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V,
 
 An interesting design question here is how to handle the auxiliary data the algorithm needs to store about each vertex. Here we require the `AStarGraph` interface to be able to give a comparable `ID` for each vertex, so the algorithm can use that as a key to an (internal) map.
 
-Another way to go would be to require the `AStarGraph` to be able to store (and produce) the auxiliary data itself. It seemed like most implementation would end up with some kind of map anyway, which is why I didn't go this route. 
+Another way to go would be to require the `AStarGraph` to be able to store (and produce) the auxiliary data itself. It seemed like most implementation would end up with some kind of map anyway, which is why I didn't go this route.
+
+### textutil
+
+Utilities for reading line based files. An maybe other stuff if it comes up
+#### NewFileScanner
+
+Create a `bufio.Scanner` from a file name
+
+```
+	scanner, close := NewFileScanner("p054_poker.txt")
+	defer close()
+	for scanner.Scan() {
+		line := scanner.Text()
+	}
+```
 
 ## Admin notes
 
