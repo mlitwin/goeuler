@@ -22,12 +22,6 @@ Work with generics
 
 */
 
-import (
-	"fmt"
-)
-
-var _ = fmt.Println
-
 func InsertionSort(input []int) {
 	for i := 1; i < len(input); i++ {
 		for j := i - 1; j >= 0; j-- {
@@ -130,7 +124,6 @@ func hoarPartition(a []int) ([]int, []int) {
 	pivot := a[high/2]
 
 	for {
-		fmt.Println(low, high)
 		for a[low] < pivot {
 			low++
 		}
