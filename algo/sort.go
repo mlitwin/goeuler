@@ -64,21 +64,23 @@ func BubbleSort(input []int) {
 }
 
 type quickSorter struct {
-	partition func([]int) ([]int, []int)
+	pivot     func([]int) int                 // find a pivot, maybe messing with the input array
+	partition func([]int, int) ([]int, []int) // split into 2 arrays around the pivot value
 }
 
 func (q quickSorter) sort(array []int) {
 	if len(array) <= 1 {
 		return
 	}
-	left, right := q.partition(array)
+	pivotIndex := q.pivot(array)
+	left, right := q.partition(array, pivotIndex)
 	q.sort(left)
 	q.sort(right)
 }
 
-func lomutoPartition(a []int) ([]int, []int) {
+func lomutoPartition(a []int, pivotIndex int) ([]int, []int) {
 	var leftEnd int
-	last := len(a) - 1
+	last := pivotIndex // must be len(a) - 1 for lumuto
 	pivot := a[last]
 	for j := 0; j < last; j++ {
 		if a[j] < pivot {
@@ -91,10 +93,10 @@ func lomutoPartition(a []int) ([]int, []int) {
 	return a[:leftEnd], a[leftEnd+1:]
 }
 
-func dutchFlagPartition(a []int) ([]int, []int) {
+func dutchFlagPartition(a []int, pivotIndex int) ([]int, []int) {
 	var lowInsert, equalInsert, highInsert int
 
-	last := len(a) - 1
+	last := pivotIndex // must be len(a) - 1 for lumuto
 	pivot := a[last]
 
 	highInsert = last
@@ -117,11 +119,11 @@ func dutchFlagPartition(a []int) ([]int, []int) {
 
 }
 
-func hoarPartition(a []int) ([]int, []int) {
+func hoarPartition(a []int, pivotIndex int) ([]int, []int) {
 	var low, high int
 
 	high = len(a) - 1
-	pivot := a[high/2]
+	pivot := a[pivotIndex]
 
 	for {
 		for a[low] < pivot {
@@ -142,17 +144,43 @@ func hoarPartition(a []int) ([]int, []int) {
 
 }
 
+func lumutoPivot(a []int) int {
+	return len(a) - 1
+}
+
+func lumutoMedianPivot(a []int) int {
+	mid := len(a) / 2
+	last := len(a) - 1
+
+	if a[mid] < a[0] {
+		a[0], a[mid] = a[mid], a[0]
+	}
+	if a[last] < a[0] {
+		a[0], a[last] = a[last], a[0]
+	}
+
+	if a[last] < a[mid] {
+		a[mid], a[last] = a[last], a[mid]
+	}
+
+	return last
+}
+
 func QuicksortLomuto(a []int) {
-	q := quickSorter{lomutoPartition}
+	q := quickSorter{lumutoPivot, lomutoPartition}
 	q.sort(a)
 }
 
 func QuicksortLomutoDutchFlag(a []int) {
-	q := quickSorter{dutchFlagPartition}
+	q := quickSorter{lumutoMedianPivot, dutchFlagPartition}
 	q.sort(a)
 }
 
+func hoarPivot(a []int) int {
+	return (len(a) - 1) / 2
+}
+
 func QuicksortHoar(a []int) {
-	q := quickSorter{hoarPartition}
+	q := quickSorter{hoarPivot, hoarPartition}
 	q.sort(a)
 }

@@ -58,6 +58,12 @@ func TestInit(t *testing.T) {
 		cases = append(cases, c)
 	}
 
+	for i := 0; i < 10; i++ {
+		c := newsortCase(2, 2)
+
+		cases = append(cases, c)
+	}
+
 	c := newsortCase(10, 1)
 	cases = append(cases, c)
 
