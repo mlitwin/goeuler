@@ -184,3 +184,84 @@ func QuicksortHoar(a []int) {
 	q := quickSorter{hoarPivot, hoarPartition}
 	q.sort(a)
 }
+
+type mergeSorter struct {
+	buf []int
+}
+
+func newMergeSorter(n int) *mergeSorter {
+	ret := mergeSorter{}
+	ret.buf = make([]int, n)
+
+	return &ret
+}
+
+// merge 2 sorted lists a and b into dest
+func (m *mergeSorter) merge(dest []int, a []int, b []int) {
+	var i, j, n int
+
+	// grab from a and b in order
+	for i < len(a) && j < len(b) {
+		if a[i] < b[j] {
+			m.buf[n] = a[i]
+			i++
+			n++
+		} else {
+			m.buf[n] = b[j]
+			j++
+			n++
+		}
+	}
+
+	// any left over in a?
+	for i < len(a) {
+		m.buf[n] = a[i]
+		i++
+		n++
+	}
+
+	// any left in b?
+	for j < len(b) {
+		m.buf[n] = b[j]
+		j++
+		n++
+	}
+
+	for k := 0; k < n; k++ {
+		dest[k] = m.buf[k]
+	}
+}
+
+func (m *mergeSorter) mergeSortTopDown(a []int) {
+	if len(a) <= 1 {
+		return
+	}
+
+	mid := len(a) / 2
+	left := a[:mid]
+	right := a[mid:]
+
+	m.mergeSortTopDown(left)
+	m.mergeSortTopDown(right)
+	m.merge(a, left, right)
+}
+
+func MergeSortTopDown(a []int) {
+	m := newMergeSorter(len(a))
+	m.mergeSortTopDown(a)
+}
+
+func MergeSortBottomUp(a []int) {
+	m := newMergeSorter(len(a))
+
+	for n := 1; n < len(a); n *= 2 {
+		for k := 0; k+n < len(a); k += 2 * n {
+			mid := k + n
+			right := k + 2*n
+			if right > len(a) {
+				right = len(a)
+			}
+			m.merge(a[k:right], a[k:mid], a[mid:right])
+		}
+	}
+}

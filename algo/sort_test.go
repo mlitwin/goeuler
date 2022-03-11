@@ -102,3 +102,11 @@ func TestQuicksortLomutoDutchFlag(t *testing.T) {
 func TestQuicksortHoar(t *testing.T) {
 	doTestSort(t, QuicksortHoar)
 }
+
+func TestMergeSortTopDown(t *testing.T) {
+	doTestSort(t, MergeSortTopDown)
+}
+
+func TestMergeSortBottomUp(t *testing.T) {
+	doTestSort(t, MergeSortBottomUp)
+}
