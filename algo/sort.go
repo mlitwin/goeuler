@@ -265,3 +265,55 @@ func MergeSortBottomUp(a []int) {
 		}
 	}
 }
+
+func CountSort[T any](a []T, bucket func(T) int, bucketCount int) {
+	buckets := make([]int, bucketCount)
+
+	for _, v := range a {
+		buckets[bucket(v)]++
+	}
+
+	for i := 1; i < len(buckets); i++ {
+		buckets[i] += buckets[i-1]
+	}
+
+	tmp := make([]T, len(a))
+
+	for i := len(a) - 1; i >= 0; i-- {
+		v := a[i]
+		b := bucket(v)
+		tmp[buckets[b]-1] = v
+		buckets[b]--
+	}
+
+	copy(a, tmp)
+}
+
+func RadixSort(a []int) {
+	const base = 10
+	var max, min int
+
+	if len(a) > 0 {
+		min, max = a[0], a[0]
+		for _, v := range a {
+			if v < min {
+				min = v
+			}
+			if v > max {
+				max = v
+			}
+		}
+	}
+	count := max - min
+
+	for exp := 1; exp <= count; exp *= base {
+		CountSort(
+			a,
+			func(v int) int {
+				b := (v - min) / exp
+				return b % base
+			},
+			base,
+		)
+	}
+}

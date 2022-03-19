@@ -16,7 +16,7 @@ type sortCase struct {
 func newsortCase(size int, n int) *sortCase {
 	ret := &sortCase{}
 	for i := 0; i < size; i++ {
-		v := rand.Intn(n)
+		v := rand.Intn(n) - n/2
 		ret.given = append(ret.given, v)
 		ret.expected = append(ret.expected, v)
 	}
@@ -60,6 +60,12 @@ func TestInit(t *testing.T) {
 
 	for i := 0; i < 10; i++ {
 		c := newsortCase(2, 2)
+
+		cases = append(cases, c)
+	}
+
+	for i := 0; i < 10; i++ {
+		c := newsortCase(10, 100)
 
 		cases = append(cases, c)
 	}
@@ -109,4 +115,31 @@ func TestMergeSortTopDown(t *testing.T) {
 
 func TestMergeSortBottomUp(t *testing.T) {
 	doTestSort(t, MergeSortBottomUp)
+}
+
+func TestCountSort(t *testing.T) {
+	countSorter := func(a []int) {
+		var max, min int
+
+		if len(a) > 0 {
+			min, max = a[0], a[0]
+			for _, v := range a {
+				if v < min {
+					min = v
+				}
+				if v > max {
+					max = v
+				}
+			}
+		}
+		bucket := func(v int) int {
+			return v - min
+		}
+		CountSort(a, bucket, max-min+1)
+	}
+	doTestSort(t, countSorter)
+}
+
+func TestRadixSort(t *testing.T) {
+	doTestSort(t, RadixSort)
 }
