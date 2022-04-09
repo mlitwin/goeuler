@@ -10,6 +10,7 @@ type HeapNode[V any, P Numeric] struct {
 	value    V
 }
 
+// A min `Heap[V any, P Numeric] `, supporting a `Decrease()` operation
 type Heap[V any, P Numeric] struct {
 	p []*HeapNode[V, P]
 }

@@ -26,6 +26,7 @@ func Pow(x int64, n int64) int64 {
 	return x * y
 }
 
+// Generic Pow() function for an Integer[V] interface
 func PowOf[V any](f Integer[V], x V, n int64) V {
 
 	if n == 0 {
@@ -49,7 +50,7 @@ func PowOf[V any](f Integer[V], x V, n int64) V {
 	}
 
 	var ret V
-	f.Mul(&ret,x, y)
+	f.Mul(&ret, x, y)
 
 	return ret
 }
@@ -77,6 +78,7 @@ func IntSqrt(n int64) int64 {
 	return l
 }
 
+// Return integer roots of `ax^2+bx+c` as a slice, largest root first
 func IntSolveQuadradic(a, b, c int64) (ret []int64) {
 	d2 := b*b - 4*a*c
 	if d2 < 0 {

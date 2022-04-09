@@ -1,5 +1,6 @@
 package arith
 
+// A RationalFraction A/B supporting extraction of arbitrary base `NextMantissaDigit()`
 type RationalFraction struct {
 	A int64
 	B int64
@@ -10,7 +11,7 @@ func NewRationalFraction(a int64, b int64) *RationalFraction {
 	return &r
 }
 
-// assuming proper fraction, spit out the next digit base whatever,
+// Assuming proper fraction, spit out the next digit base whatever,
 // and advance to to remainder
 func (r *RationalFraction) NextMantissaDigit(base int64) int64 {
 	// A/B = k/base, so k = A*base / B

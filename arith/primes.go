@@ -1,5 +1,6 @@
 package arith
 
+// Basic primality test
 func IsPrime(x int64) bool {
 	if x <= 1 {
 		return false

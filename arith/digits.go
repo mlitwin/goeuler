@@ -13,6 +13,7 @@ func Digits(n int64, b int64) []int64 {
 	return ret
 }
 
+// Convert digit slice back to `int64`
 func ValueOfDigits(n []int64, b int64) (ret int64) {
 	i := len(n) - 1
 	var place int64 = 1
@@ -25,6 +26,7 @@ func ValueOfDigits(n []int64, b int64) (ret int64) {
 	return
 }
 
+// Count digits in a slice
 func HistogramOfDigits(n []int64, b int64) []int64 {
 	ret := make([]int64, b)
 

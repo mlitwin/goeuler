@@ -1,7 +1,7 @@
 package arith
 
+// A factoradic base number, supporting conversion to a permutation.
 // https://en.wikipedia.org/wiki/Factorial_number_system
-
 type Factoradic struct {
 	Value  int64
 	Digits []int64

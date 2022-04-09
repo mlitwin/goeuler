@@ -1,5 +1,6 @@
 package arith
 
+// Divisors implements an Iterator through the divisors of n
 type Divisors struct {
 	n   int64
 	cur int64
@@ -44,6 +45,7 @@ func LCM(a, b int64) int64 {
 	return (a * b) / gcd
 }
 
+// Modular inverse (or 0 if no inverse)
 func InverseModN(a, n int64) int64 {
 	var t int64 = 0
 	var newt int64 = 1

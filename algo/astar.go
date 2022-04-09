@@ -1,4 +1,4 @@
-// Package algo comprises algorithms conceptually more complicaticated than those in package arith
+// Package algo comprises algorithms conceptually more complicated than those in package arith
 // These will generally be graph theoretical, sorting and searching, etc., rather than more
 // conceptually arithmetic ones. algo can use arith, but not conversely.
 package algo
@@ -7,6 +7,14 @@ package algo
 // They need a graph object which traffics in verticies.
 // In order to be able to store auxilliary information about verticies
 // there also needs to be a comparable vertex ID
+/*
+
+A `MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) (W, []*V) ` function. Takes an `AStarGraph`, start and end vertex, returns the min weight, and the path.
+
+An interesting design question here is how to handle the auxiliary data the algorithm needs to store about each vertex. Here we require the `AStarGraph` interface to be able to give a comparable `ID` for each vertex, so the algorithm can use that as a key to an (internal) map.
+
+Another way to go would be to require the `AStarGraph` to be able to store (and produce) the auxiliary data itself. It seemed like most implementation would end up with some kind of map anyway, which is why I didn't go this route.
+*/
 type AStarGraph[V any, ID comparable, W Numeric] interface {
 	GetId(v *V) ID
 	Heuristic(v *V) W
@@ -14,11 +22,11 @@ type AStarGraph[V any, ID comparable, W Numeric] interface {
 }
 
 type aStarVerexState[V any, W Numeric] struct {
-	v *V
-	visited bool
-	score  W
-	heapNode       *HeapNode[*V,W]
-	prev *aStarVerexState[V,W]
+	v        *V
+	visited  bool
+	score    W
+	heapNode *HeapNode[*V, W]
+	prev     *aStarVerexState[V, W]
 }
 
 func (s aStarVerexState[V, W]) wouldBeBetter(score W) bool {
@@ -31,22 +39,21 @@ func (s *aStarVerexState[V, W]) setScore(score W) {
 }
 
 type minPathAStarImp[V any, ID comparable, W Numeric] struct {
-	g AStarGraph[V,ID,W]
+	g     AStarGraph[V, ID, W]
 	start *V
-	end *V
+	end   *V
 
-	endId ID
+	endId       ID
 	vertexState map[ID]*aStarVerexState[V, W]
-	openSet *Heap[*V,W]
+	openSet     *Heap[*V, W]
 }
 
-
 // getState is a convenience method to get vertex state *, with autovivification
-func (imp minPathAStarImp[V,ID,W]) getState(v *V) *aStarVerexState[V,W] {
+func (imp minPathAStarImp[V, ID, W]) getState(v *V) *aStarVerexState[V, W] {
 	id := imp.g.GetId(v)
 	ret := imp.vertexState[id]
 	if nil == ret { // vivify
-		ret = &aStarVerexState[V,W]{}
+		ret = &aStarVerexState[V, W]{}
 		ret.v = v
 		imp.vertexState[id] = ret
 	}
@@ -54,14 +61,12 @@ func (imp minPathAStarImp[V,ID,W]) getState(v *V) *aStarVerexState[V,W] {
 	return ret
 }
 
-func (imp minPathAStarImp[V,ID,W]) isEnd(v *V) bool {
+func (imp minPathAStarImp[V, ID, W]) isEnd(v *V) bool {
 	return imp.g.GetId(v) == imp.endId
 }
 
-
-
 // Backtrack to find the actual path that was used
-func (imp minPathAStarImp[V,ID,W]) backtrackPath(v *V) []*V {
+func (imp minPathAStarImp[V, ID, W]) backtrackPath(v *V) []*V {
 	var path []*V
 	s := imp.getState(v)
 
@@ -73,17 +78,16 @@ func (imp minPathAStarImp[V,ID,W]) backtrackPath(v *V) []*V {
 	return path
 }
 
-func newminPathAStarImp[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) minPathAStarImp[V,ID,W] {
-	imp := minPathAStarImp[V,ID,W]{g, start, end,  g.GetId(end), nil, nil}
-	imp.vertexState =  make(map[ID]*aStarVerexState[V,W])
-	imp.openSet = NewHeap[*V,W]()
-
+func newminPathAStarImp[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start *V, end *V) minPathAStarImp[V, ID, W] {
+	imp := minPathAStarImp[V, ID, W]{g, start, end, g.GetId(end), nil, nil}
+	imp.vertexState = make(map[ID]*aStarVerexState[V, W])
+	imp.openSet = NewHeap[*V, W]()
 
 	return imp
 }
 
-func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) (W, []*V) {
-	imp := newminPathAStarImp[V,ID,W](g, start, end)
+func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start *V, end *V) (W, []*V) {
+	imp := newminPathAStarImp[V, ID, W](g, start, end)
 	imp.openSet.Push(start, 0)
 
 	for imp.openSet.Len() > 0 {
