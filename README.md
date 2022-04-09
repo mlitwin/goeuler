@@ -22,35 +22,6 @@ More complicated algorithms.
 
 ### textutil
 
-Utilities for reading line based files. An maybe other stuff if it comes up
+Utilities for reading line based files. An maybe other stuff if it comes up.
 
-#### NewFileScanner
-
-Create a `bufio.Scanner` from a file name
-
-```
-	scanner, close := NewFileScanner("p054_poker.txt")
-	defer close()
-	for scanner.Scan() {
-		line := scanner.Text()
-	}
-```
-
-## Admin notes
-
-## Setup
-
-We will use `go1.18` beta, to play with the latest features, especially generics.
-
-Maybe use a workspace: 
-https://go.googlesource.com/proposal/+/master/design/45713-workspace.md
-
-Snippets:
-
-* `go1.18beta1` - workspaces / generics' `alias godev=go1.18beta1`
-* godev work init arith algo
-* godev mod init github.com/mlitwin/goeuler/arith
-
-### Docs
-
-https://github.com/princjef/gomarkdoc
+[textutil.md](./docs/textutil.md)

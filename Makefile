@@ -3,5 +3,6 @@
 
 docs:
 	mkdir -p docs
-	(cd arith; gomarkdoc > ../docs/arith.md)
-	(cd algo; gomarkdoc > ../docs/algo.md)
+	gomarkdoc ./arith > ./docs/arith.md
+	gomarkdoc ./algo > ./docs/algo.md
+	gomarkdoc ./textutil > ./docs/textutil.md
