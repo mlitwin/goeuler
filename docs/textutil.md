@@ -17,17 +17,15 @@ import "github.com/mlitwin/goeuler/textutil"
 func NewFileScanner(filename string) (*bufio.Scanner, func())
 ```
 
-Create a \`bufio\.Scanner\` from a file name\. Usage:
+Create a bufio\.Scanner from a file name\.
+
+Usage:
 
 ```
 scanner, close := NewFileScanner("p054_poker.txt")
-
 defer close()
-
 for scanner.Scan() {
-
 	line := scanner.Text()
-
 }
 ```
 

@@ -26,14 +26,16 @@ import "github.com/mlitwin/goeuler/arith"
 - [func ValueOfDigits(n []int64, b int64) (ret int64)](<#func-valueofdigits>)
 - [type DigitList](<#type-digitlist>)
   - [func NewDigitList(base int64) *DigitList](<#func-newdigitlist>)
-  - [func (d DigitList) Cmp(x *[]int64, a []int64, b []int64) int](<#func-digitlist-cmp>)
+  - [func (d DigitList) Cmp(a []int64, b []int64) int](<#func-digitlist-cmp>)
   - [func (d DigitList) Diff(x *[]int64, a []int64, b []int64)](<#func-digitlist-diff>)
+  - [func (d DigitList) Digits(n int64) []int64](<#func-digitlist-digits>)
   - [func (d DigitList) Div(x *[]int64, a []int64, b []int64)](<#func-digitlist-div>)
   - [func (d DigitList) Let(x *[]int64, a int64)](<#func-digitlist-let>)
   - [func (d DigitList) Mul(x *[]int64, a []int64, b []int64)](<#func-digitlist-mul>)
   - [func (d DigitList) Neg(x *[]int64, a []int64)](<#func-digitlist-neg>)
   - [func (d DigitList) Set(x *[]int64, a []int64)](<#func-digitlist-set>)
   - [func (d DigitList) Sum(x *[]int64, a []int64, b []int64)](<#func-digitlist-sum>)
+  - [func (d DigitList) ValueOfDigits(n []int64) (ret int64)](<#func-digitlist-valueofdigits>)
 - [type Divisors](<#type-divisors>)
   - [func NewDivisors(n int64) *Divisors](<#func-newdivisors>)
   - [func (d *Divisors) HasValue() bool](<#func-divisors-hasvalue>)
@@ -150,6 +152,8 @@ func LCM(a, b int64) int64
 func NormalizeDigits(n []int64, b int64) []int64
 ```
 
+Return the base b digit list n as a proper base b number\, each digit in range\, and no leading zeros\.
+
 ## func Pow
 
 ```go
@@ -190,6 +194,8 @@ Convert digit slice back to \`int64\`
 
 ## type DigitList
 
+Integer interface
+
 ```go
 type DigitList struct {
     // contains filtered or unexported fields
@@ -205,13 +211,21 @@ func NewDigitList(base int64) *DigitList
 ### func \(DigitList\) Cmp
 
 ```go
-func (d DigitList) Cmp(x *[]int64, a []int64, b []int64) int
+func (d DigitList) Cmp(a []int64, b []int64) int
 ```
+
+Comparison: a X b \(\-1 means \<; 0 means ==; 1 means \>\)
 
 ### func \(DigitList\) Diff
 
 ```go
 func (d DigitList) Diff(x *[]int64, a []int64, b []int64)
+```
+
+### func \(DigitList\) Digits
+
+```go
+func (d DigitList) Digits(n int64) []int64
 ```
 
 ### func \(DigitList\) Div
@@ -248,6 +262,12 @@ func (d DigitList) Set(x *[]int64, a []int64)
 
 ```go
 func (d DigitList) Sum(x *[]int64, a []int64, b []int64)
+```
+
+### func \(DigitList\) ValueOfDigits
+
+```go
+func (d DigitList) ValueOfDigits(n []int64) (ret int64)
 ```
 
 ## type Divisors
