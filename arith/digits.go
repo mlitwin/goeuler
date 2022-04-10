@@ -37,6 +37,7 @@ func HistogramOfDigits(n []int64, b int64) []int64 {
 	return ret
 }
 
+// Return the base b digit list n as a proper base b number, each digit in range, and no leading zeros.
 func NormalizeDigits(n []int64, b int64) []int64 {
 	var ret []int64
 	var i int
@@ -55,11 +56,18 @@ func NormalizeDigits(n []int64, b int64) []int64 {
 		ret = append([]int64{d}, ret...)
 	}
 
-	return ret
+	var firstNonzeroIndex int
+	for firstNonzeroIndex < len(ret) {
+		if ret[firstNonzeroIndex] != 0 {
+			break
+		}
+		firstNonzeroIndex++
+	}
+
+	return ret[firstNonzeroIndex:]
 }
 
 // Integer interface
-
 type DigitList struct {
 	base int64
 }
@@ -161,33 +169,30 @@ func (d DigitList) Div(x *[]int64, a []int64, b []int64) {
 	// TBD long division https://en.wikipedia.org/wiki/Long_division
 }
 
-func (d DigitList) Cmp(x *[]int64, a []int64, b []int64) int {
-	var l int
-	if len(a) > len(b) {
-		l = len(a)
-	} else {
-		l = len(b)
+// Comparison: a X b (-1 means <; 0 means ==; 1 means >)
+func (d DigitList) Cmp(a []int64, b []int64) int {
+	if len(a) < len(b) {
+		return -1
+	} else if len(a) > len(b) {
+		return 1
 	}
 
-	for i := l - 1; i >= 0; i-- {
-		var da, db int64
-
-		if i < len(a) {
-			da = a[i]
-		}
-
-		if i < len(b) {
-			db = b[i]
-		}
-
-		if da < db {
+	for i := 0; i < len(a); i++ {
+		if a[i] < b[i] {
 			return -1
-		}
-
-		if db > da {
+		} else if a[i] > b[i] {
 			return 1
 		}
 	}
 
 	return 0
+}
+
+func (d DigitList) Digits(n int64) []int64 {
+	return Digits(n, d.base)
+}
+
+func (d DigitList) ValueOfDigits(n []int64) (ret int64) {
+
+	return ValueOfDigits(n, d.base)
 }
