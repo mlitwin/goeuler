@@ -18,6 +18,7 @@ import "github.com/mlitwin/goeuler/arith"
 - [func InverseModN(a, n int64) int64](<#func-inversemodn>)
 - [func IsPrime(x int64) bool](<#func-isprime>)
 - [func LCM(a, b int64) int64](<#func-lcm>)
+- [func NewRationalSurd(D int64) (*RationalSurd, *RationalSurdValue)](<#func-newrationalsurd>)
 - [func NormalizeDigits(n []int64, b int64) []int64](<#func-normalizedigits>)
 - [func Pow(x int64, n int64) int64](<#func-pow>)
 - [func PowOf[V any](f Integer[V], x V, n int64) V](<#func-powof>)
@@ -62,6 +63,12 @@ import "github.com/mlitwin/goeuler/arith"
 - [type RationalFraction](<#type-rationalfraction>)
   - [func NewRationalFraction(a int64, b int64) *RationalFraction](<#func-newrationalfraction>)
   - [func (r *RationalFraction) NextMantissaDigit(base int64) int64](<#func-rationalfraction-nextmantissadigit>)
+- [type RationalSurd](<#type-rationalsurd>)
+  - [func (s *RationalSurd) IntFloor(d *RationalSurdValue) int64](<#func-rationalsurd-intfloor>)
+  - [func (s *RationalSurd) Invert(d *RationalSurdValue)](<#func-rationalsurd-invert>)
+  - [func (s *RationalSurd) NextCFConvergent(cur []RationalFraction, a int64) []RationalFraction](<#func-rationalsurd-nextcfconvergent>)
+  - [func (s *RationalSurd) NextCFTerm(d *RationalSurdValue) int64](<#func-rationalsurd-nextcfterm>)
+- [type RationalSurdValue](<#type-rationalsurdvalue>)
 
 
 ## Constants
@@ -144,6 +151,12 @@ Basic primality test
 
 ```go
 func LCM(a, b int64) int64
+```
+
+## func NewRationalSurd
+
+```go
+func NewRationalSurd(D int64) (*RationalSurd, *RationalSurdValue)
 ```
 
 ## func NormalizeDigits
@@ -463,6 +476,59 @@ func (r *RationalFraction) NextMantissaDigit(base int64) int64
 ```
 
 Assuming proper fraction\, spit out the next digit base whatever\, and advance to to remainder
+
+## type RationalSurd
+
+Operations on \(a\+b\*sqrt\(D\)\)/c
+
+```go
+type RationalSurd struct {
+    D int64 // surd
+    // contains filtered or unexported fields
+}
+```
+
+### func \(\*RationalSurd\) IntFloor
+
+```go
+func (s *RationalSurd) IntFloor(d *RationalSurdValue) int64
+```
+
+floor\(d\)
+
+### func \(\*RationalSurd\) Invert
+
+```go
+func (s *RationalSurd) Invert(d *RationalSurdValue)
+```
+
+1/d
+
+### func \(\*RationalSurd\) NextCFConvergent
+
+```go
+func (s *RationalSurd) NextCFConvergent(cur []RationalFraction, a int64) []RationalFraction
+```
+
+Next convergent for continued fraction start with an empty \[\]RationalFraction slice\. Convergent will be the last in the returned slice\. Slice is kept for recurrence relation\.
+
+### func \(\*RationalSurd\) NextCFTerm
+
+```go
+func (s *RationalSurd) NextCFTerm(d *RationalSurdValue) int64
+```
+
+Next term in continued fraction
+
+## type RationalSurdValue
+
+Instance of \(a\+b\*sqrt\(D\)\)/c
+
+```go
+type RationalSurdValue struct {
+    // contains filtered or unexported fields
+}
+```
 
 
 
