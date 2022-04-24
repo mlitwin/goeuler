@@ -1,6 +1,8 @@
 package arith
 
-// Return the digits of n base b as a slice
+//  Return the digits of n base b as a slice
+//
+//  Deprecated: Use DigitsList
 func Digits(n int64, b int64) []int64 {
 	var ret []int64
 
@@ -14,6 +16,8 @@ func Digits(n int64, b int64) []int64 {
 }
 
 // Convert digit slice back to `int64`
+//
+//  Deprecated: Use DigitsList
 func ValueOfDigits(n []int64, b int64) (ret int64) {
 	i := len(n) - 1
 	var place int64 = 1
@@ -27,6 +31,8 @@ func ValueOfDigits(n []int64, b int64) (ret int64) {
 }
 
 // Count digits in a slice
+//
+//  Deprecated: Do it by self
 func HistogramOfDigits(n []int64, b int64) []int64 {
 	ret := make([]int64, b)
 
@@ -38,6 +44,8 @@ func HistogramOfDigits(n []int64, b int64) []int64 {
 }
 
 // Return the base b digit list n as a proper base b number, each digit in range, and no leading zeros.
+//
+//  Deprecated: Use DigitsList
 func NormalizeDigits(n []int64, b int64) []int64 {
 	var ret []int64
 	var i int
@@ -67,11 +75,14 @@ func NormalizeDigits(n []int64, b int64) []int64 {
 	return ret[firstNonzeroIndex:]
 }
 
-// Integer interface
+// Manage integers as lists of digits with a given base
+//
+// Conforms to Integer interface
 type DigitList struct {
 	base int64
 }
 
+// Constructor for DigitList
 func NewDigitList(base int64) *DigitList {
 	return &DigitList{base}
 }
@@ -80,15 +91,18 @@ func (d DigitList) normalize(x *[]int64) {
 	*x = NormalizeDigits(*x, d.base)
 }
 
+// x = a (int64)
 func (d DigitList) Let(x *[]int64, a int64) {
 	*x = Digits(a, d.base)
 }
 
+// x = a
 func (d DigitList) Set(x *[]int64, a []int64) {
 	*x = make([]int64, len(a))
 	copy(*x, a)
 }
 
+// x = -a
 func (d DigitList) Neg(x *[]int64, a []int64) {
 	d.Set(x, a)
 	for i, v := range *x {
@@ -109,6 +123,7 @@ func makemax(a []int64, b []int64) []int64 {
 	return make([]int64, l)
 }
 
+// x = a + b
 func (d DigitList) Sum(x *[]int64, a []int64, b []int64) {
 	t := makemax(a, b)
 
@@ -125,6 +140,7 @@ func (d DigitList) Sum(x *[]int64, a []int64, b []int64) {
 	d.normalize(x)
 }
 
+// x = a - b
 func (d DigitList) Diff(x *[]int64, a []int64, b []int64) {
 	t := makemax(a, b)
 
@@ -142,6 +158,7 @@ func (d DigitList) Diff(x *[]int64, a []int64, b []int64) {
 
 }
 
+// x = a * b
 func (d DigitList) Mul(x *[]int64, a []int64, b []int64) {
 	t := make([]int64, len(a)+len(b))
 
@@ -159,6 +176,9 @@ func (d DigitList) Mul(x *[]int64, a []int64, b []int64) {
 
 }
 
+// x = a / b (integer division)
+//
+// BUG(mlitwin): Not actually implemented.
 func (d DigitList) Div(x *[]int64, a []int64, b []int64) {
 	t := make([]int64, len(a))
 
@@ -188,10 +208,12 @@ func (d DigitList) Cmp(a []int64, b []int64) int {
 	return 0
 }
 
+// Create digit list representation of n.
 func (d DigitList) Digits(n int64) []int64 {
 	return Digits(n, d.base)
 }
 
+// Compute integer value represented by list of digits.
 func (d DigitList) ValueOfDigits(n []int64) (ret int64) {
 
 	return ValueOfDigits(n, d.base)

@@ -19,6 +19,7 @@ import "github.com/mlitwin/goeuler/arith"
 - [func IsPrime(x int64) bool](<#func-isprime>)
 - [func LCM(a, b int64) int64](<#func-lcm>)
 - [func NewRationalSurd(D int64) (*RationalSurd, *RationalSurdValue)](<#func-newrationalsurd>)
+- [func NextCFConvergentOf[V any](s *RationalSurd, i Integer[V], cur []V, a int64) []V](<#func-nextcfconvergentof>)
 - [func NormalizeDigits(n []int64, b int64) []int64](<#func-normalizedigits>)
 - [func Pow(x int64, n int64) int64](<#func-pow>)
 - [func PowOf[V any](f Integer[V], x V, n int64) V](<#func-powof>)
@@ -46,7 +47,7 @@ import "github.com/mlitwin/goeuler/arith"
   - [func (f Factoradic) Permutation(n int64) []int64](<#func-factoradic-permutation>)
 - [type IntModM](<#type-intmodm>)
   - [func NewIntModM(m int64) *IntModM](<#func-newintmodm>)
-  - [func (m IntModM) Cmp(x *int64, a int64, b int64) int](<#func-intmodm-cmp>)
+  - [func (m IntModM) Cmp(a int64, b int64) int](<#func-intmodm-cmp>)
   - [func (m IntModM) Diff(x *int64, a int64, b int64)](<#func-intmodm-diff>)
   - [func (m IntModM) Div(x *int64, a int64, b int64)](<#func-intmodm-div>)
   - [func (m IntModM) Let(x *int64, a int64)](<#func-intmodm-let>)
@@ -99,7 +100,9 @@ n Choose k https://cp-algorithms.com/combinatorics/binomial-coefficients.html
 func Digits(n int64, b int64) []int64
 ```
 
-Return the digits of n base b as a slice
+### Return the digits of n base b as a slice
+
+Deprecated: Use DigitsList
 
 ## func GCD
 
@@ -113,7 +116,9 @@ func GCD(a, b int64) int64
 func HistogramOfDigits(n []int64, b int64) []int64
 ```
 
-Count digits in a slice
+### Count digits in a slice
+
+Deprecated: Do it by self
 
 ## func IntSolveQuadradic
 
@@ -159,6 +164,14 @@ func LCM(a, b int64) int64
 func NewRationalSurd(D int64) (*RationalSurd, *RationalSurdValue)
 ```
 
+## func NextCFConvergentOf
+
+```go
+func NextCFConvergentOf[V any](s *RationalSurd, i Integer[V], cur []V, a int64) []V
+```
+
+Generic Next convergent: input is Integer slce \[p0\,q0\,p1\,q1\]
+
 ## func NormalizeDigits
 
 ```go
@@ -166,6 +179,8 @@ func NormalizeDigits(n []int64, b int64) []int64
 ```
 
 Return the base b digit list n as a proper base b number\, each digit in range\, and no leading zeros\.
+
+Deprecated: Use DigitsList
 
 ## func Pow
 
@@ -203,11 +218,15 @@ func Totient(n int64) int64
 func ValueOfDigits(n []int64, b int64) (ret int64)
 ```
 
-Convert digit slice back to \`int64\`
+### Convert digit slice back to \`int64\`
+
+Deprecated: Use DigitsList
 
 ## type DigitList
 
-Integer interface
+### Manage integers as lists of digits with a given base
+
+Conforms to Integer interface
 
 ```go
 type DigitList struct {
@@ -220,6 +239,8 @@ type DigitList struct {
 ```go
 func NewDigitList(base int64) *DigitList
 ```
+
+Constructor for DigitList
 
 ### func \(DigitList\) Cmp
 
@@ -235,11 +256,15 @@ Comparison: a X b \(\-1 means \<; 0 means ==; 1 means \>\)
 func (d DigitList) Diff(x *[]int64, a []int64, b []int64)
 ```
 
+x = a \- b
+
 ### func \(DigitList\) Digits
 
 ```go
 func (d DigitList) Digits(n int64) []int64
 ```
+
+Create digit list representation of n\.
 
 ### func \(DigitList\) Div
 
@@ -247,11 +272,17 @@ func (d DigitList) Digits(n int64) []int64
 func (d DigitList) Div(x *[]int64, a []int64, b []int64)
 ```
 
+x = a / b \(integer division\)
+
+BUG\(mlitwin\): Not actually implemented\.
+
 ### func \(DigitList\) Let
 
 ```go
 func (d DigitList) Let(x *[]int64, a int64)
 ```
+
+x = a \(int64\)
 
 ### func \(DigitList\) Mul
 
@@ -259,11 +290,15 @@ func (d DigitList) Let(x *[]int64, a int64)
 func (d DigitList) Mul(x *[]int64, a []int64, b []int64)
 ```
 
+x = a \* b
+
 ### func \(DigitList\) Neg
 
 ```go
 func (d DigitList) Neg(x *[]int64, a []int64)
 ```
+
+x = \-a
 
 ### func \(DigitList\) Set
 
@@ -271,17 +306,23 @@ func (d DigitList) Neg(x *[]int64, a []int64)
 func (d DigitList) Set(x *[]int64, a []int64)
 ```
 
+x = a
+
 ### func \(DigitList\) Sum
 
 ```go
 func (d DigitList) Sum(x *[]int64, a []int64, b []int64)
 ```
 
+x = a \+ b
+
 ### func \(DigitList\) ValueOfDigits
 
 ```go
 func (d DigitList) ValueOfDigits(n []int64) (ret int64)
 ```
+
+Compute integer value represented by list of digits\.
 
 ## type Divisors
 
@@ -353,7 +394,7 @@ func NewIntModM(m int64) *IntModM
 ### func \(IntModM\) Cmp
 
 ```go
-func (m IntModM) Cmp(x *int64, a int64, b int64) int
+func (m IntModM) Cmp(a int64, b int64) int
 ```
 
 ### func \(IntModM\) Diff
@@ -411,7 +452,7 @@ type Integer[V any] interface {
     Diff(x *V, a V, b V)
     Mul(x *V, a V, b V)
     Div(x *V, a V, b V)
-    Cmp(x *V, a V, b V) int
+    Cmp(a V, b V) int
 }
 ```
 
