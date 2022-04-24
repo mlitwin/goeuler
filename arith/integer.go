@@ -10,7 +10,7 @@ type Integer[V any] interface {
 	Diff(x *V, a V, b V)
 	Mul(x *V, a V, b V)
 	Div(x *V, a V, b V)
-	Cmp(x *V, a V, b V) int
+	Cmp(a V, b V) int
 }
 
 // Integer Modulo m, represented in an int64
@@ -83,7 +83,7 @@ func (m IntModM) Div(x *int64, a int64, b int64) {
 	*x = (a * b) % m.m
 }
 
-func (m IntModM) Cmp(x *int64, a int64, b int64) int {
+func (m IntModM) Cmp(a int64, b int64) int {
 	switch {
 	case a < b:
 		return -1
