@@ -1,9 +1,7 @@
 package arith
 
 //  Return the digits of n base b as a slice
-//
-//  Deprecated: Use DigitsList
-func Digits(n int64, b int64) []int64 {
+func digits(n int64, b int64) []int64 {
 	var ret []int64
 
 	for n > 0 {
@@ -16,9 +14,7 @@ func Digits(n int64, b int64) []int64 {
 }
 
 // Convert digit slice back to `int64`
-//
-//  Deprecated: Use DigitsList
-func ValueOfDigits(n []int64, b int64) (ret int64) {
+func valueOfDigits(n []int64, b int64) (ret int64) {
 	i := len(n) - 1
 	var place int64 = 1
 	for i >= 0 {
@@ -30,23 +26,8 @@ func ValueOfDigits(n []int64, b int64) (ret int64) {
 	return
 }
 
-// Count digits in a slice
-//
-//  Deprecated: Do it by self
-func HistogramOfDigits(n []int64, b int64) []int64 {
-	ret := make([]int64, b)
-
-	for _, d := range n {
-		ret[d]++
-	}
-
-	return ret
-}
-
 // Return the base b digit list n as a proper base b number, each digit in range, and no leading zeros.
-//
-//  Deprecated: Use DigitsList
-func NormalizeDigits(n []int64, b int64) []int64 {
+func normalizeDigits(n []int64, b int64) []int64 {
 	var ret []int64
 	var i int
 	var r int64
@@ -75,7 +56,11 @@ func NormalizeDigits(n []int64, b int64) []int64 {
 	return ret[firstNonzeroIndex:]
 }
 
-// Manage integers as lists of digits with a given base
+// Manage integers as lists of digits with a given base.
+//
+// This is basically an inefficent BigInt, intended as an exercise
+// in the basic algorithms of digit based arithmetic, and for problems
+// which primarily invove digit manipulation for other reasons.
 //
 // Conforms to Integer interface
 type DigitList struct {
@@ -88,12 +73,12 @@ func NewDigitList(base int64) *DigitList {
 }
 
 func (d DigitList) normalize(x *[]int64) {
-	*x = NormalizeDigits(*x, d.base)
+	*x = normalizeDigits(*x, d.base)
 }
 
 // x = a (int64)
 func (d DigitList) Let(x *[]int64, a int64) {
-	*x = Digits(a, d.base)
+	*x = digits(a, d.base)
 }
 
 // x = a
@@ -210,11 +195,11 @@ func (d DigitList) Cmp(a []int64, b []int64) int {
 
 // Create digit list representation of n.
 func (d DigitList) Digits(n int64) []int64 {
-	return Digits(n, d.base)
+	return digits(n, d.base)
 }
 
 // Compute integer value represented by list of digits.
 func (d DigitList) ValueOfDigits(n []int64) (ret int64) {
 
-	return ValueOfDigits(n, d.base)
+	return valueOfDigits(n, d.base)
 }
