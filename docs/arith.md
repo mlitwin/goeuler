@@ -14,9 +14,7 @@ The general type used for integers is \`int64\`\, since Project Euler generally 
 
 - [Constants](<#constants>)
 - [func C(n int64, k int64) int64](<#func-c>)
-- [func Digits(n int64, b int64) []int64](<#func-digits>)
 - [func GCD(a, b int64) int64](<#func-gcd>)
-- [func HistogramOfDigits(n []int64, b int64) []int64](<#func-histogramofdigits>)
 - [func IntSolveQuadradic(a, b, c int64) (ret []int64)](<#func-intsolvequadradic>)
 - [func IntSqrt(n int64) int64](<#func-intsqrt>)
 - [func InverseModN(a, n int64) int64](<#func-inversemodn>)
@@ -24,12 +22,10 @@ The general type used for integers is \`int64\`\, since Project Euler generally 
 - [func LCM(a, b int64) int64](<#func-lcm>)
 - [func NewRationalSurd(D int64) (*RationalSurd, *RationalSurdValue)](<#func-newrationalsurd>)
 - [func NextCFConvergentOf[V any](s *RationalSurd, i Integer[V], cur []V, a int64) []V](<#func-nextcfconvergentof>)
-- [func NormalizeDigits(n []int64, b int64) []int64](<#func-normalizedigits>)
 - [func Pow(x int64, n int64) int64](<#func-pow>)
 - [func PowOf[V any](f Integer[V], x V, n int64) V](<#func-powof>)
 - [func Reduce(i Iterator, f func(int64, int64) int64, start int64) int64](<#func-reduce>)
 - [func Totient(n int64) int64](<#func-totient>)
-- [func ValueOfDigits(n []int64, b int64) (ret int64)](<#func-valueofdigits>)
 - [type DigitList](<#type-digitlist>)
   - [func NewDigitList(base int64) *DigitList](<#func-newdigitlist>)
   - [func (d DigitList) Cmp(a []int64, b []int64) int](<#func-digitlist-cmp>)
@@ -98,31 +94,11 @@ func C(n int64, k int64) int64
 
 n Choose k https://cp-algorithms.com/combinatorics/binomial-coefficients.html
 
-## func Digits
-
-```go
-func Digits(n int64, b int64) []int64
-```
-
-### Return the digits of n base b as a slice
-
-Deprecated: Use DigitsList
-
 ## func GCD
 
 ```go
 func GCD(a, b int64) int64
 ```
-
-## func HistogramOfDigits
-
-```go
-func HistogramOfDigits(n []int64, b int64) []int64
-```
-
-### Count digits in a slice
-
-Deprecated: Do it by self
 
 ## func IntSolveQuadradic
 
@@ -176,16 +152,6 @@ func NextCFConvergentOf[V any](s *RationalSurd, i Integer[V], cur []V, a int64) 
 
 Generic Next convergent: input is Integer slce \[p0\,q0\,p1\,q1\]
 
-## func NormalizeDigits
-
-```go
-func NormalizeDigits(n []int64, b int64) []int64
-```
-
-Return the base b digit list n as a proper base b number\, each digit in range\, and no leading zeros\.
-
-Deprecated: Use DigitsList
-
 ## func Pow
 
 ```go
@@ -216,19 +182,11 @@ A generic \`Reduce\(\)\` to int64 method for Iterator's
 func Totient(n int64) int64
 ```
 
-## func ValueOfDigits
-
-```go
-func ValueOfDigits(n []int64, b int64) (ret int64)
-```
-
-### Convert digit slice back to \`int64\`
-
-Deprecated: Use DigitsList
-
 ## type DigitList
 
-### Manage integers as lists of digits with a given base
+Manage integers as lists of digits with a given base\.
+
+This is basically an inefficent BigInt\, intended as an exercise in the basic algorithms of digit based arithmetic\, and for problems which primarily invove digit manipulation for other reasons\.
 
 Conforms to Integer interface
 
