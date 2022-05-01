@@ -76,7 +76,7 @@ func (s *RationalSurd) NextCFConvergent(cur []RationalFraction, a int64) []Ratio
 }
 
 // Generic Next convergent: input is Integer slce [p0,q0,p1,q1]
-func NextCFConvergentOf[V any](s *RationalSurd, i Integer[V], cur []V, a int64) []V {
+func NextCFConvergentOf[V any](i Integer[V], cur []V, a int64) []V {
 	var vA V
 	var p0, q0, p1, q1 V
 	var p, q V

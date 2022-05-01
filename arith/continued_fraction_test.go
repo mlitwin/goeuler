@@ -25,7 +25,7 @@ func testConvergentOf(t *testing.T, D int64, n int, expected RationalFraction) {
 
 	for i := 0; i <= n; i++ {
 		a := cf.NextCFTerm(d)
-		f = NextCFConvergentOf[[]int64](cf, *dl, f, a)
+		f = NextCFConvergentOf[[]int64](*dl, f, a)
 	}
 
 	v := NewRationalFraction(dl.ValueOfDigits(f[2]), dl.ValueOfDigits(f[3]))
