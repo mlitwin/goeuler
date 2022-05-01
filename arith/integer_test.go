@@ -21,8 +21,16 @@ func TestBigInt(t *testing.T) {
 	b := NewBigInt()
 	v := big.NewInt(2)
 	x := big.NewInt(0)
-	b.Neg(x, *v)
+	b.Let(x, 3)
+
 	c := b.Cmp(*x, *v)
+
+	if c != 1 {
+		t.Fatal("Failed Let BigInt")
+	}
+
+	b.Neg(x, *v)
+	c = b.Cmp(*x, *v)
 
 	if c != -1 {
 		t.Fatal("Failed Neg BigInt")

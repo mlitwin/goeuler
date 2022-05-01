@@ -105,7 +105,7 @@ func NewBigInt() *BigInt {
 }
 
 func (b BigInt) Let(x *big.Int, a int64) {
-	(*x).SetInt64(a)
+	x.SetInt64(a)
 }
 
 func (b BigInt) Set(x *big.Int, a big.Int) {
