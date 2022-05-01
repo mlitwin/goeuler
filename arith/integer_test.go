@@ -1,17 +1,30 @@
 package arith
 
 import (
+	"math/big"
 	"testing"
 )
 
 func TestIntModP(t *testing.T) {
 	m := NewIntModM(2)
 	if m.m != 2 {
-		t.Fatal("Falied to NewIntModM", m)
+		t.Fatal("Failed to NewIntModM", m)
 	}
 	var x int64
 	m.Let(&x, 3)
 	if x != 1 {
-		t.Fatal("Falied to Let", 3, m)
+		t.Fatal("Failed to Let", 3, m)
+	}
+}
+
+func TestBigInt(t *testing.T) {
+	b := NewBigInt()
+	v := big.NewInt(2)
+	x := big.NewInt(0)
+	b.Neg(x, *v)
+	c := b.Cmp(*x, *v)
+
+	if c != -1 {
+		t.Fatal("Failed Neg BigInt")
 	}
 }

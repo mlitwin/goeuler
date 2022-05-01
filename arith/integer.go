@@ -1,5 +1,7 @@
 package arith
 
+import "math/big"
+
 // generic "Integer" operations
 // Not a mathematics integer, but a computer science integer - basically has addition/subtraction/multiplication/divistion
 type Integer[V any] interface {
@@ -92,4 +94,38 @@ func (m IntModM) Cmp(a int64, b int64) int {
 	}
 
 	return 0
+}
+
+// Integer[big.Int]
+type BigInt struct {
+}
+
+func NewBigInt() *BigInt {
+	return &BigInt{}
+}
+
+func (b BigInt) Let(x *big.Int, a int64) {
+	(*x).SetInt64(a)
+}
+
+func (b BigInt) Set(x *big.Int, a big.Int) {
+	x.Set(&a)
+}
+func (b BigInt) Neg(x *big.Int, a big.Int) {
+	x.Neg(&a)
+}
+func (bb BigInt) Sum(x *big.Int, a big.Int, b big.Int) {
+	x.Add(&a, &b)
+}
+func (bb BigInt) Diff(x *big.Int, a big.Int, b big.Int) {
+	x.Sub(&a, &b)
+}
+func (bb BigInt) Mul(x *big.Int, a big.Int, b big.Int) {
+	x.Mul(&a, &b)
+}
+func (bb BigInt) Div(x *big.Int, a big.Int, b big.Int) {
+	x.Div(&a, &b)
+}
+func (bv BigInt) Cmp(a big.Int, b big.Int) int {
+	return a.Cmp(&b)
 }
