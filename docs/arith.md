@@ -21,11 +21,26 @@ The general type used for integers is \`int64\`\, since Project Euler generally 
 - [func IsPrime(x int64) bool](<#func-isprime>)
 - [func LCM(a, b int64) int64](<#func-lcm>)
 - [func NewRationalSurd(D int64) (*RationalSurd, *RationalSurdValue)](<#func-newrationalsurd>)
-- [func NextCFConvergentOf[V any](s *RationalSurd, i Integer[V], cur []V, a int64) []V](<#func-nextcfconvergentof>)
+- [func NextCFConvergentOf[V any](i Integer[V], cur []V, a V) []V](<#func-nextcfconvergentof>)
 - [func Pow(x int64, n int64) int64](<#func-pow>)
 - [func PowOf[V any](f Integer[V], x V, n int64) V](<#func-powof>)
 - [func Reduce(i Iterator, f func(int64, int64) int64, start int64) int64](<#func-reduce>)
 - [func Totient(n int64) int64](<#func-totient>)
+- [type BigInt](<#type-bigint>)
+  - [func NewBigInt() *BigInt](<#func-newbigint>)
+  - [func (bv BigInt) Cmp(a big.Int, b big.Int) int](<#func-bigint-cmp>)
+  - [func (bb BigInt) Diff(x *big.Int, a big.Int, b big.Int)](<#func-bigint-diff>)
+  - [func (bb BigInt) Div(x *big.Int, a big.Int, b big.Int)](<#func-bigint-div>)
+  - [func (b BigInt) Let(x *big.Int, a int64)](<#func-bigint-let>)
+  - [func (bb BigInt) Mul(x *big.Int, a big.Int, b big.Int)](<#func-bigint-mul>)
+  - [func (b BigInt) Neg(x *big.Int, a big.Int)](<#func-bigint-neg>)
+  - [func (b BigInt) Set(x *big.Int, a big.Int)](<#func-bigint-set>)
+  - [func (bb BigInt) Sum(x *big.Int, a big.Int, b big.Int)](<#func-bigint-sum>)
+- [type Combinations](<#type-combinations>)
+  - [func NewCombinations(n, k int64) *Combinations](<#func-newcombinations>)
+  - [func (c *Combinations) GetValue() []int64](<#func-combinations-getvalue>)
+  - [func (c *Combinations) HasValue() bool](<#func-combinations-hasvalue>)
+  - [func (c *Combinations) NextValue()](<#func-combinations-nextvalue>)
 - [type DigitList](<#type-digitlist>)
   - [func NewDigitList(base int64) *DigitList](<#func-newdigitlist>)
   - [func (d DigitList) Cmp(a []int64, b []int64) int](<#func-digitlist-cmp>)
@@ -147,7 +162,7 @@ func NewRationalSurd(D int64) (*RationalSurd, *RationalSurdValue)
 ## func NextCFConvergentOf
 
 ```go
-func NextCFConvergentOf[V any](s *RationalSurd, i Integer[V], cur []V, a int64) []V
+func NextCFConvergentOf[V any](i Integer[V], cur []V, a V) []V
 ```
 
 Generic Next convergent: input is Integer slce \[p0\,q0\,p1\,q1\]
@@ -180,6 +195,111 @@ A generic \`Reduce\(\)\` to int64 method for Iterator's
 
 ```go
 func Totient(n int64) int64
+```
+
+## type BigInt
+
+Integer\[big\.Int\]
+
+```go
+type BigInt struct {
+}
+```
+
+### func NewBigInt
+
+```go
+func NewBigInt() *BigInt
+```
+
+### func \(BigInt\) Cmp
+
+```go
+func (bv BigInt) Cmp(a big.Int, b big.Int) int
+```
+
+### func \(BigInt\) Diff
+
+```go
+func (bb BigInt) Diff(x *big.Int, a big.Int, b big.Int)
+```
+
+### func \(BigInt\) Div
+
+```go
+func (bb BigInt) Div(x *big.Int, a big.Int, b big.Int)
+```
+
+### func \(BigInt\) Let
+
+```go
+func (b BigInt) Let(x *big.Int, a int64)
+```
+
+### func \(BigInt\) Mul
+
+```go
+func (bb BigInt) Mul(x *big.Int, a big.Int, b big.Int)
+```
+
+### func \(BigInt\) Neg
+
+```go
+func (b BigInt) Neg(x *big.Int, a big.Int)
+```
+
+### func \(BigInt\) Set
+
+```go
+func (b BigInt) Set(x *big.Int, a big.Int)
+```
+
+### func \(BigInt\) Sum
+
+```go
+func (bb BigInt) Sum(x *big.Int, a big.Int, b big.Int)
+```
+
+## type Combinations
+
+Iterate through the combinations https://en.wikipedia.org/wiki/Combination#Enumerating_k-combinations
+
+```
+c := NewCombinations(n, k)
+
+for ; c.HasValue(); c.NextValue() {
+	v := c.GetValue()
+}
+```
+
+```go
+type Combinations struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func NewCombinations
+
+```go
+func NewCombinations(n, k int64) *Combinations
+```
+
+### func \(\*Combinations\) GetValue
+
+```go
+func (c *Combinations) GetValue() []int64
+```
+
+### func \(\*Combinations\) HasValue
+
+```go
+func (c *Combinations) HasValue() bool
+```
+
+### func \(\*Combinations\) NextValue
+
+```go
+func (c *Combinations) NextValue()
 ```
 
 ## type DigitList
