@@ -47,6 +47,7 @@ The general type used for integers is \`int64\`\, since Project Euler generally 
   - [func (d DigitList) Diff(x *[]int64, a []int64, b []int64)](<#func-digitlist-diff>)
   - [func (d DigitList) Digits(n int64) []int64](<#func-digitlist-digits>)
   - [func (d DigitList) Div(x *[]int64, a []int64, b []int64)](<#func-digitlist-div>)
+  - [func (d DigitList) Histogram(n []int64) (ret []int64)](<#func-digitlist-histogram>)
   - [func (d DigitList) Let(x *[]int64, a int64)](<#func-digitlist-let>)
   - [func (d DigitList) Mul(x *[]int64, a []int64, b []int64)](<#func-digitlist-mul>)
   - [func (d DigitList) Neg(x *[]int64, a []int64)](<#func-digitlist-neg>)
@@ -358,6 +359,14 @@ x = a / b \(integer division\)
 
 BUG\(mlitwin\): Not actually implemented\.
 
+### func \(DigitList\) Histogram
+
+```go
+func (d DigitList) Histogram(n []int64) (ret []int64)
+```
+
+Histogram of digit values
+
 ### func \(DigitList\) Let
 
 ```go
@@ -451,11 +460,15 @@ type Factoradic struct {
 func NewFactoradic(n int64) *Factoradic
 ```
 
+Create the factoradic representation of n\.
+
 ### func \(Factoradic\) Permutation
 
 ```go
 func (f Factoradic) Permutation(n int64) []int64
 ```
+
+Convert the factoradic to a permutation of n items\.
 
 ## type IntModM
 
