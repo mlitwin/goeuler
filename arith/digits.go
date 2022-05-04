@@ -203,3 +203,13 @@ func (d DigitList) ValueOfDigits(n []int64) (ret int64) {
 
 	return valueOfDigits(n, d.base)
 }
+
+// Histogram of digit values
+func (d DigitList) Histogram(n []int64) (ret []int64) {
+	ret = make([]int64, d.base)
+	for _, v := range n {
+		ret[v]++
+	}
+
+	return
+}

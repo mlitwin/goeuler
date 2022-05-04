@@ -7,6 +7,7 @@ type Factoradic struct {
 	Digits []int64
 }
 
+// Create the factoradic representation of n.
 func NewFactoradic(n int64) *Factoradic {
 	f := Factoradic{n, nil}
 	var place int64 = 1
@@ -19,6 +20,7 @@ func NewFactoradic(n int64) *Factoradic {
 	return &f
 }
 
+// Convert the factoradic to a permutation of n items.
 func (f Factoradic) Permutation(n int64) []int64 {
 	var digits []int64
 	var perm []int64
