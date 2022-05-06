@@ -79,6 +79,7 @@ The general type used for integers is \`int64\`\, since Project Euler generally 
   - [func (f *PrimeFactorization) NextValue() (int64, int64)](<#func-primefactorization-nextvalue>)
 - [type RationalFraction](<#type-rationalfraction>)
   - [func NewRationalFraction(a int64, b int64) *RationalFraction](<#func-newrationalfraction>)
+  - [func NextFareySequence(f []RationalFraction, n int64) []RationalFraction](<#func-nextfareysequence>)
   - [func (r *RationalFraction) NextMantissaDigit(base int64) int64](<#func-rationalfraction-nextmantissadigit>)
 - [type RationalSurd](<#type-rationalsurd>)
   - [func (s *RationalSurd) IntFloor(d *RationalSurdValue) int64](<#func-rationalsurd-intfloor>)
@@ -604,6 +605,22 @@ type RationalFraction struct {
 ```go
 func NewRationalFraction(a int64, b int64) *RationalFraction
 ```
+
+### func NextFareySequence
+
+```go
+func NextFareySequence(f []RationalFraction, n int64) []RationalFraction
+```
+
+Produce the n'th Farey sequence from the \(n\-1\)th https://en.wikipedia.org/wiki/Farey_sequence
+
+You can pass nil to start things off:
+
+```
+NextFareySequence(nil, 1)
+```
+
+And pass a slice of the previous sequence\, if all you are interested in is expanding that subsequence\.
 
 ### func \(\*RationalFraction\) NextMantissaDigit
 

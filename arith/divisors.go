@@ -88,3 +88,34 @@ func Totient(n int64) int64 {
 	}
 	return result
 }
+
+// Produce the n'th Farey sequence from the (n-1)th
+// https://en.wikipedia.org/wiki/Farey_sequence
+//
+// You can pass nil to start things off:
+//
+//	NextFareySequence(nil, 1)
+//
+// And pass a slice of the previous sequence, if all you are interested in
+// is expanding that subsequence.
+func NextFareySequence(f []RationalFraction, n int64) []RationalFraction {
+	if nil == f {
+		return []RationalFraction{{0, 1}, {1, 1}}
+	}
+
+	var ret []RationalFraction
+
+	for i, v := range f {
+		ret = append(ret, v)
+		if i < len(f)-1 {
+			q := v.B + f[i+1].B
+			if q <= n+1 {
+				p := v.A + f[i+1].A
+				ret = append(ret, RationalFraction{p, q})
+			}
+		}
+	}
+
+	return ret
+
+}
