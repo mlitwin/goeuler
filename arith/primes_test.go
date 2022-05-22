@@ -10,6 +10,9 @@ func TestPrimes(t *testing.T) {
 		t.Fatal(n, "is prime")
 	}
 
+	if IsPrime(1) {
+		t.Fatal(1, "is not prime")
+	}
 }
 
 func TestPrimeFactorization(t *testing.T) {

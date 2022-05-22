@@ -22,7 +22,7 @@ func (d *Divisors) NextValue() int64 {
 
 	d.cur++
 
-	for ; d.cur <= d.n; d.cur++ {
+	for ; d.cur*d.cur <= d.n; d.cur++ {
 		if d.n%d.cur == 0 {
 			break
 		}

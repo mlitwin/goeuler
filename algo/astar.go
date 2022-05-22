@@ -87,7 +87,7 @@ func newminPathAStarImp[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W],
 }
 
 func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start *V, end *V) (W, []*V) {
-	imp := newminPathAStarImp[V, ID, W](g, start, end)
+	imp := newminPathAStarImp(g, start, end)
 	imp.openSet.Push(start, 0)
 
 	for imp.openSet.Len() > 0 {
