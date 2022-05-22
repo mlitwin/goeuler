@@ -4,89 +4,85 @@
 package algo
 
 // AStarGraph defines the interface needed by the caller
-// They need a graph object which traffics in verticies.
-// In order to be able to store auxilliary information about verticies
-// there also needs to be a comparable vertex ID
+// They need a graph object which traffics in vertex id's, which need to be comparable
+// in  order to be able to store auxilliary information about vertices.
 /*
 
-A `MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V,ID,W], start *V, end *V) (W, []*V) ` function. Takes an `AStarGraph`, start and end vertex, returns the min weight, and the path.
+A `MinPathAStar[ID comparable, W Numeric](g AStarGraph[ID,W], start ID, end ID) (W, []ID) ` function. Takes an `AStarGraph`, start and end vertex, returns the min weight, and the path.
 
-An interesting design question here is how to handle the auxiliary data the algorithm needs to store about each vertex. Here we require the `AStarGraph` interface to be able to give a comparable `ID` for each vertex, so the algorithm can use that as a key to an (internal) map.
+An interesting design question here is how to handle the auxiliary data the algorithm needs to store about each vertex. Here we require the `AStarGraph` interface to traffic with a comparable `ID` for each vertex, so the algorithm can use that as a key to an (internal) map.
 
 Another way to go would be to require the `AStarGraph` to be able to store (and produce) the auxiliary data itself. It seemed like most implementation would end up with some kind of map anyway, which is why I didn't go this route.
 */
-type AStarGraph[V any, ID comparable, W Numeric] interface {
-	GetId(v *V) ID
-	Heuristic(v *V) W
-	Visit(v *V, visit func(neighbor *V, weight W))
+type AStarGraph[ID comparable, W Numeric] interface {
+	Heuristic(v ID) W
+	Visit(v ID, visit func(neighbor ID, weight W))
 }
 
-type aStarVerexState[V any, W Numeric] struct {
-	v        *V
+type aStarVerexState[ID comparable, W Numeric] struct {
+	v        ID
 	visited  bool
 	score    W
-	heapNode *HeapNode[*V, W]
-	prev     *aStarVerexState[V, W]
+	heapNode *HeapNode[ID, W]
+	prev     *aStarVerexState[ID, W]
 }
 
-func (s aStarVerexState[V, W]) wouldBeBetter(score W) bool {
+func (s aStarVerexState[ID, W]) wouldBeBetter(score W) bool {
 	return !s.visited || score < s.score
 }
 
-func (s *aStarVerexState[V, W]) setScore(score W) {
+func (s *aStarVerexState[ID, W]) setScore(score W) {
 	s.score = score
 	s.visited = true
 }
 
-type minPathAStarImp[V any, ID comparable, W Numeric] struct {
-	g     AStarGraph[V, ID, W]
-	start *V
-	end   *V
+type minPathAStarImp[ID comparable, W Numeric] struct {
+	g     AStarGraph[ID, W]
+	start ID
+	end   ID
 
-	endId       ID
-	vertexState map[ID]*aStarVerexState[V, W]
-	openSet     *Heap[*V, W]
+	vertexState map[ID]*aStarVerexState[ID, W]
+	openSet     *Heap[ID, W]
 }
 
 // getState is a convenience method to get vertex state *, with autovivification
-func (imp minPathAStarImp[V, ID, W]) getState(v *V) *aStarVerexState[V, W] {
-	id := imp.g.GetId(v)
-	ret := imp.vertexState[id]
+func (imp minPathAStarImp[ID, W]) getState(v ID) *aStarVerexState[ID, W] {
+	ret := imp.vertexState[v]
 	if nil == ret { // vivify
-		ret = &aStarVerexState[V, W]{}
+		ret = &aStarVerexState[ID, W]{}
 		ret.v = v
-		imp.vertexState[id] = ret
+		imp.vertexState[v] = ret
 	}
 
 	return ret
 }
 
-func (imp minPathAStarImp[V, ID, W]) isEnd(v *V) bool {
-	return imp.g.GetId(v) == imp.endId
+func (imp minPathAStarImp[ID, W]) isEnd(v ID) bool {
+	return v == imp.end
 }
 
 // Backtrack to find the actual path that was used
-func (imp minPathAStarImp[V, ID, W]) backtrackPath(v *V) []*V {
-	var path []*V
+func (imp minPathAStarImp[ID, W]) backtrackPath(v ID) []ID {
+	var path []ID
 	s := imp.getState(v)
 
 	for s != nil {
-		path = append([]*V{s.v}, path...)
+		path = append([]ID{s.v}, path...)
 		s = s.prev
 	}
 
 	return path
 }
 
-func newminPathAStarImp[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start *V, end *V) minPathAStarImp[V, ID, W] {
-	imp := minPathAStarImp[V, ID, W]{g, start, end, g.GetId(end), nil, nil}
-	imp.vertexState = make(map[ID]*aStarVerexState[V, W])
-	imp.openSet = NewHeap[*V, W]()
+func newminPathAStarImp[ID comparable, W Numeric](g AStarGraph[ID, W], start ID, end ID) minPathAStarImp[ID, W] {
+	imp := minPathAStarImp[ID, W]{g, start, end, nil, nil}
+	imp.vertexState = make(map[ID]*aStarVerexState[ID, W])
+	imp.openSet = NewHeap[ID, W]()
 
 	return imp
 }
 
-func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start *V, end *V) (W, []*V) {
+func MinPathAStar[ID comparable, W Numeric](g AStarGraph[ID, W], start ID, end ID) (W, []ID) {
 	imp := newminPathAStarImp(g, start, end)
 	imp.openSet.Push(start, 0)
 
@@ -99,7 +95,7 @@ func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start
 			return curState.score, imp.backtrackPath(cur.value)
 		}
 
-		g.Visit(cur.value, func(neighbor *V, weight W) {
+		g.Visit(cur.value, func(neighbor ID, weight W) {
 			score := curState.score + weight
 			nState := imp.getState(neighbor)
 

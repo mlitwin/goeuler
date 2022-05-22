@@ -15,7 +15,7 @@ Package algo comprises algorithms conceptually more complicated than those in pa
 - [func InsertionSort(input []int)](<#func-insertionsort>)
 - [func MergeSortBottomUp(a []int)](<#func-mergesortbottomup>)
 - [func MergeSortTopDown(a []int)](<#func-mergesorttopdown>)
-- [func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start *V, end *V) (W, []*V)](<#func-minpathastar>)
+- [func MinPathAStar[ID comparable, W Numeric](g AStarGraph[ID, W], start ID, end ID) (W, []ID)](<#func-minpathastar>)
 - [func QuicksortHoar(a []int)](<#func-quicksorthoar>)
 - [func QuicksortLomuto(a []int)](<#func-quicksortlomuto>)
 - [func QuicksortLomutoDutchFlag(a []int)](<#func-quicksortlomutodutchflag>)
@@ -37,13 +37,11 @@ Package algo comprises algorithms conceptually more complicated than those in pa
   - [func NewGridDag(m [][]int64) *GridDag](<#func-newgriddag>)
   - [func (g *GridDag) AddEdge(i0, j0 int, i1, j1 int)](<#func-griddag-addedge>)
   - [func (g *GridDag) AddVertex(i, j int, w int64)](<#func-griddag-addvertex>)
-  - [func (g GridDag) GetId(v *GridIndex) GridIndex](<#func-griddag-getid>)
-  - [func (g GridDag) Heuristic(v *GridIndex) int64](<#func-griddag-heuristic>)
+  - [func (g GridDag) Heuristic(v GridIndex) int64](<#func-griddag-heuristic>)
   - [func (g GridDag) MinPathAStar(i0, j0 int, i1, j1 int) (int64, []GridIndex)](<#func-griddag-minpathastar>)
-  - [func (g GridDag) Visit(v *GridIndex, visit func(neighbor *GridIndex, weight int64))](<#func-griddag-visit>)
-  - [func (g GridDag) VisitAllNeighbors(rows, cols int, visit func(i0, j0 int, i1, j1 int))](<#func-griddag-visitallneighbors>)
+  - [func (g GridDag) Visit(v GridIndex, visit func(neighbor GridIndex, weight int64))](<#func-griddag-visit>)
+  - [func (g GridDag) VisitAllNeighbors(visit func(i0, j0 int, i1, j1 int))](<#func-griddag-visitallneighbors>)
 - [type GridIndex](<#type-gridindex>)
-  - [func GridNeighbors(i0, j0 int, w, h int) (ret []GridIndex)](<#func-gridneighbors>)
 - [type Heap](<#type-heap>)
   - [func NewHeap[V any, P Numeric]() *Heap[V, P]](<#func-newheap>)
   - [func (h *Heap[V, P]) Decrease(n *HeapNode[V, P], priority P)](<#func-heapv-p-decrease>)
@@ -89,7 +87,7 @@ func MergeSortTopDown(a []int)
 ## func MinPathAStar
 
 ```go
-func MinPathAStar[V any, ID comparable, W Numeric](g AStarGraph[V, ID, W], start *V, end *V) (W, []*V)
+func MinPathAStar[ID comparable, W Numeric](g AStarGraph[ID, W], start ID, end ID) (W, []ID)
 ```
 
 ## func QuicksortHoar
@@ -124,19 +122,18 @@ func SelectionSort(input []int)
 
 ## type AStarGraph
 
-AStarGraph defines the interface needed by the caller They need a graph object which traffics in verticies\. In order to be able to store auxilliary information about verticies there also needs to be a comparable vertex ID
+AStarGraph defines the interface needed by the caller They need a graph object which traffics in vertex id's\, which need to be comparable in  order to be able to store auxilliary information about vertices\.
 
-A \`MinPathAStar\[V any\, ID comparable\, W Numeric\]\(g AStarGraph\[V\,ID\,W\]\, start \*V\, end \*V\) \(W\, \[\]\*V\) \` function\. Takes an \`AStarGraph\`\, start and end vertex\, returns the min weight\, and the path\.
+A \`MinPathAStar\[ID comparable\, W Numeric\]\(g AStarGraph\[ID\,W\]\, start ID\, end ID\) \(W\, \[\]ID\) \` function\. Takes an \`AStarGraph\`\, start and end vertex\, returns the min weight\, and the path\.
 
-An interesting design question here is how to handle the auxiliary data the algorithm needs to store about each vertex\. Here we require the \`AStarGraph\` interface to be able to give a comparable \`ID\` for each vertex\, so the algorithm can use that as a key to an \(internal\) map\.
+An interesting design question here is how to handle the auxiliary data the algorithm needs to store about each vertex\. Here we require the \`AStarGraph\` interface to traffic with a comparable \`ID\` for each vertex\, so the algorithm can use that as a key to an \(internal\) map\.
 
 Another way to go would be to require the \`AStarGraph\` to be able to store \(and produce\) the auxiliary data itself\. It seemed like most implementation would end up with some kind of map anyway\, which is why I didn't go this route\.
 
 ```go
-type AStarGraph[V any, ID comparable, W Numeric] interface {
-    GetId(v *V) ID
-    Heuristic(v *V) W
-    Visit(v *V, visit func(neighbor *V, weight W))
+type AStarGraph[ID comparable, W Numeric] interface {
+    Heuristic(v ID) W
+    Visit(v ID, visit func(neighbor ID, weight W))
 }
 ```
 
@@ -253,17 +250,13 @@ func (g *GridDag) AddEdge(i0, j0 int, i1, j1 int)
 func (g *GridDag) AddVertex(i, j int, w int64)
 ```
 
-### func \(GridDag\) GetId
-
-```go
-func (g GridDag) GetId(v *GridIndex) GridIndex
-```
-
 ### func \(GridDag\) Heuristic
 
 ```go
-func (g GridDag) Heuristic(v *GridIndex) int64
+func (g GridDag) Heuristic(v GridIndex) int64
 ```
+
+Generic Graph interface \- here the index is the same type as the vertex
 
 ### func \(GridDag\) MinPathAStar
 
@@ -274,13 +267,13 @@ func (g GridDag) MinPathAStar(i0, j0 int, i1, j1 int) (int64, []GridIndex)
 ### func \(GridDag\) Visit
 
 ```go
-func (g GridDag) Visit(v *GridIndex, visit func(neighbor *GridIndex, weight int64))
+func (g GridDag) Visit(v GridIndex, visit func(neighbor GridIndex, weight int64))
 ```
 
 ### func \(GridDag\) VisitAllNeighbors
 
 ```go
-func (g GridDag) VisitAllNeighbors(rows, cols int, visit func(i0, j0 int, i1, j1 int))
+func (g GridDag) VisitAllNeighbors(visit func(i0, j0 int, i1, j1 int))
 ```
 
 Convenience utility to visit the potential neighbors of verticies
@@ -292,14 +285,6 @@ type GridIndex struct {
     I, J int
 }
 ```
-
-### func GridNeighbors
-
-```go
-func GridNeighbors(i0, j0 int, w, h int) (ret []GridIndex)
-```
-
-Convenience utility to get the potential neighbors of an element
 
 ## type Heap
 
