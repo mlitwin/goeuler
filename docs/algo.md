@@ -33,6 +33,17 @@ Package algo comprises algorithms conceptually more complicated than those in pa
   - [func (f FenwickTree) Debug()](<#func-fenwicktree-debug>)
   - [func (f FenwickTree) Read(idx int64) (ret int64)](<#func-fenwicktree-read>)
   - [func (f *FenwickTree) Update(idx int64, val int64)](<#func-fenwicktree-update>)
+- [type GridDag](<#type-griddag>)
+  - [func NewGridDag(m [][]int64) *GridDag](<#func-newgriddag>)
+  - [func (g *GridDag) AddEdge(i0, j0 int, i1, j1 int)](<#func-griddag-addedge>)
+  - [func (g *GridDag) AddVertex(i, j int, w int64)](<#func-griddag-addvertex>)
+  - [func (g GridDag) GetId(v *GridIndex) GridIndex](<#func-griddag-getid>)
+  - [func (g GridDag) Heuristic(v *GridIndex) int64](<#func-griddag-heuristic>)
+  - [func (g GridDag) MinPathAStar(i0, j0 int, i1, j1 int) (int64, []GridIndex)](<#func-griddag-minpathastar>)
+  - [func (g GridDag) Visit(v *GridIndex, visit func(neighbor *GridIndex, weight int64))](<#func-griddag-visit>)
+  - [func (g GridDag) VisitAllNeighbors(rows, cols int, visit func(i0, j0 int, i1, j1 int))](<#func-griddag-visitallneighbors>)
+- [type GridIndex](<#type-gridindex>)
+  - [func GridNeighbors(i0, j0 int, w, h int) (ret []GridIndex)](<#func-gridneighbors>)
 - [type Heap](<#type-heap>)
   - [func NewHeap[V any, P Numeric]() *Heap[V, P]](<#func-newheap>)
   - [func (h *Heap[V, P]) Decrease(n *HeapNode[V, P], priority P)](<#func-heapv-p-decrease>)
@@ -213,6 +224,82 @@ func (f FenwickTree) Read(idx int64) (ret int64)
 ```go
 func (f *FenwickTree) Update(idx int64, val int64)
 ```
+
+## type GridDag
+
+Generic Graph / DAG based on a grid
+
+```go
+type GridDag struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func NewGridDag
+
+```go
+func NewGridDag(m [][]int64) *GridDag
+```
+
+### func \(\*GridDag\) AddEdge
+
+```go
+func (g *GridDag) AddEdge(i0, j0 int, i1, j1 int)
+```
+
+### func \(\*GridDag\) AddVertex
+
+```go
+func (g *GridDag) AddVertex(i, j int, w int64)
+```
+
+### func \(GridDag\) GetId
+
+```go
+func (g GridDag) GetId(v *GridIndex) GridIndex
+```
+
+### func \(GridDag\) Heuristic
+
+```go
+func (g GridDag) Heuristic(v *GridIndex) int64
+```
+
+### func \(GridDag\) MinPathAStar
+
+```go
+func (g GridDag) MinPathAStar(i0, j0 int, i1, j1 int) (int64, []GridIndex)
+```
+
+### func \(GridDag\) Visit
+
+```go
+func (g GridDag) Visit(v *GridIndex, visit func(neighbor *GridIndex, weight int64))
+```
+
+### func \(GridDag\) VisitAllNeighbors
+
+```go
+func (g GridDag) VisitAllNeighbors(rows, cols int, visit func(i0, j0 int, i1, j1 int))
+```
+
+Convenience utility to visit the potential neighbors of verticies
+
+## type GridIndex
+
+```go
+type GridIndex struct {
+    I, J int
+}
+```
+
+### func GridNeighbors
+
+```go
+func GridNeighbors(i0, j0 int, w, h int) (ret []GridIndex)
+```
+
+Convenience utility to get the potential neighbors of an element
 
 ## type Heap
 

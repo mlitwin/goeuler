@@ -9,6 +9,7 @@ import "github.com/mlitwin/goeuler/textutil"
 ## Index
 
 - [func NewFileScanner(filename string) (*bufio.Scanner, func())](<#func-newfilescanner>)
+- [func ReadMatrix(filename string, separator string) ([][]int64, int, int)](<#func-readmatrix>)
 
 
 ## func NewFileScanner
@@ -27,6 +28,12 @@ defer close()
 for scanner.Scan() {
 	line := scanner.Text()
 }
+```
+
+## func ReadMatrix
+
+```go
+func ReadMatrix(filename string, separator string) ([][]int64, int, int)
 ```
 
 
