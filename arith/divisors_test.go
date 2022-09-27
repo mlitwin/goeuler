@@ -1,13 +1,11 @@
 package arith
 
 import (
-	"fmt"
 	"testing"
 )
 
 func divisorsSum(n int64) (ret int64) {
 	f := NewDivisors(n)
-	fmt.Println(f)
 
 	for f.HasValue() {
 		d := f.NextValue()
