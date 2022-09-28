@@ -2,31 +2,53 @@ package arith
 
 // Divisors implements an Iterator through the divisors of n
 type Divisors struct {
-	n   int64
-	cur int64
+	n       int64
+	sqrtN   int64
+	test    int64
+	current int64
+	saved   int64
 }
 
 func NewDivisors(n int64) *Divisors {
 	d := Divisors{n: n}
-	d.cur = 1
+	d.sqrtN = IntSqrt(n)
+	d.test = 1
+	d.current = 1
+	if n > 1 {
+		d.saved = n
+	}
 
 	return &d
 }
 
 func (d *Divisors) HasValue() bool {
-	return d.cur <= d.n
+	return d.current != 0
+}
+
+func (d *Divisors) advance() {
+	if d.saved != 0 {
+		d.current, d.saved = d.saved, 0
+	} else {
+		d.test++
+		d.current = 0
+		for ; d.test <= d.sqrtN; d.test++ {
+			if d.n%d.test == 0 {
+				d.current = d.test
+				d.saved = d.n / d.current
+				if d.saved == d.current {
+					d.saved = 0
+				}
+				break
+			}
+		}
+
+	}
 }
 
 func (d *Divisors) NextValue() int64 {
-	ret := d.cur
 
-	d.cur++
-
-	for ; d.cur <= d.n; d.cur++ {
-		if d.n%d.cur == 0 {
-			break
-		}
-	}
+	ret := d.current
+	d.advance()
 
 	return ret
 }
