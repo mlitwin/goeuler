@@ -41,8 +41,8 @@ func TestFactoradicPermutation(t *testing.T) {
 func TestFactorial(t *testing.T) {
 	var k int64
 	k = Factorial(0)
-	if k != 0 {
-		t.Fatal("Factorial", 0, k, "not equal to", 0)
+	if k != 1 {
+		t.Fatal("Factorial", 0, k, "not equal to", 1)
 	}
 
 	k = Factorial(1)
