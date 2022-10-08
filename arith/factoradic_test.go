@@ -37,3 +37,21 @@ func TestFactoradicPermutation(t *testing.T) {
 		t.Fatal("Falied to Permutation n=7, 2982", p)
 	}
 }
+
+func TestFactorial(t *testing.T) {
+	var k int64
+	k = Factorial(0)
+	if k != 0 {
+		t.Fatal("Factorial", 0, k, "not equal to", 0)
+	}
+
+	k = Factorial(1)
+	if k != 1 {
+		t.Fatal("Factorial", 1, k, "not equal to", 1)
+	}
+
+	k = Factorial(5)
+	if k != 120 {
+		t.Fatal("Factorial", 5, k, "not equal to", 120)
+	}
+}

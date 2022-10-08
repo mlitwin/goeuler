@@ -46,3 +46,23 @@ func (f Factoradic) Permutation(n int64) []int64 {
 
 	return perm
 }
+
+// n!
+// There are fast ways to do this, if we want
+// a FactorialOf[] function
+// e.g. http://www.luschny.de/math/factorial/FastFactorialFunctions.htm
+func Factorial(n int64) int64 {
+	var ret int64
+	var i int64
+
+	if n == 0 {
+		return 1
+	}
+
+	ret = 1
+	for i = 2; i <= n; i++ {
+		ret *= i
+	}
+
+	return ret
+}
